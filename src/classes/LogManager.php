@@ -82,7 +82,7 @@ class LogManager
     private static function createFileLogger()
     {
         //self::debug('Creating file logger.');
-        self::$baseLogger = new Logger('Canlytics');
+        self::$baseLogger = new Logger('Common');
         //set up a buffered html and rotating file handler as our defaults for every case
         $logLev=self::getLogLevel();
         if(self::$htmlLogging)
@@ -109,7 +109,7 @@ class LogManager
     private static function createDbLogger()
     {
         //self::debug('creating db logger');
-        self::$baseLogger = new Logger('Canlytics');
+        self::$baseLogger = new Logger('Common');
         //set up a buffered html and rotating file handler as our defaults for every case
         $logLev=self::getLogLevel();
         if(self::$htmlLogging)
