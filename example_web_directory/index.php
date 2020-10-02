@@ -3,9 +3,9 @@
  * Main handler that pipes everything to the appropriate controller, view, etc.
  */
 
-use canlytics\common\web\RequestHandler;
-use canlytics\common\web\routes\ControllerRoute;
-use canlytics\common\web\routes\ViewRoute;
+use rizwanjiwan\common\web\RequestHandler;
+use rizwanjiwan\common\web\routes\ControllerRoute;
+use rizwanjiwan\common\web\routes\ViewRoute;
 
 date_default_timezone_set('America/Toronto');
 
