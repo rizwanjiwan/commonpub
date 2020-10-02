@@ -1,0 +1,18 @@
+{
+  "name": "rizwanjiwan/common",
+  "version": "1.0.0",
+  "type": "package",
+  "description": "Common code for my projects",
+  "license": "MIT",
+  "require": {
+    "monolog/monolog": "2.1.*",
+    "jenssegers/blade": "^1.1",
+    "ext-json": "*",
+    "ext-pdo": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "rizwanjiwan\\common\\": "src"
+    }
+  }
+}

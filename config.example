@@ -1,0 +1,25 @@
+#For logging to a DB, provide credentials:
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_LOGIN=dev
+DB_PASSWORD=password
+DB_DATABASE=probatio
+
+#if the above aren't provided, you must provide a path to a logging directory with a filename prefix:
+LOG_FILE=/../../../../../logs/log
+
+#other paths
+CACHE_DIR=/../../../../../tmp/cache/
+VIEW_DIR=/../../../../../src/views/
+TMP_DIR=/../../../../../tmp/
+
+#namespace where you stash your controllers or you can use the fully qualified name when routing. This just makes your life easier.
+CONTROLER_NAMESPACE=rizwanjiwan\project\controllers\
+
+#what env is this? (dev or prod)
+ENV=dev
+#force
+FORCE_HTTPS=false
+
+#debug level [DEBUG, ERROR, INFO] are common settings
+LOG_LEV=DEBUG
