@@ -9,6 +9,8 @@ use Exception;
 use rizwanjiwan\common\classes\Config;
 use rizwanjiwan\common\classes\exceptions\RouteException;
 use rizwanjiwan\common\classes\LogManager;
+use function Sentry\init as sentryInit;
+use function Sentry\captureException as sendExceptionToSentry;
 
 class RequestHandler
 {
@@ -17,6 +19,8 @@ class RequestHandler
 	 * @var array key=>value of string url and the associated Route.
 	 */
 	private $routes=array();
+
+	private $chainedExceptionHandler; //for chaining to the previous handler if we don't deal with it.
 
 	private $errorsToFreakOutOver=array(
 		E_ERROR				=>	'Error',
@@ -71,6 +75,14 @@ class RequestHandler
 	public function registerForShutdownErrors()
 	{
 		register_shutdown_function(array($this, 'handelShutdownError'));
+        if(Config::getBool('SENTRY_ON'))//do other stuff for sentry
+        {
+            sentryInit([
+                'dsn' => 'https://examplePublicKey@o0.ingest.sentry.io/0',
+                'environment'=>Config::get('ENV')
+            ]);
+            $this->chainedExceptionHandler = set_exception_handler(array($this, 'handleException'));
+        }
 	}
 
 	public function handelShutdownError()
@@ -106,6 +118,19 @@ class RequestHandler
 		if($fatal)
 			$request->respondError($message);
 	}
+
+    /**
+     * @param $e Exception
+     * @throws Exception
+     */
+    public function handleException($e)
+    {
+        sendExceptionToSentry($e);
+        if ($this->chainedExceptionHandler!==null)
+                call_user_func($this->chainedExceptionHandler, $e);
+        else
+                throw $e;
+    }
 	/*
 	 * Routes are defined based on the request URI.
 	 *
