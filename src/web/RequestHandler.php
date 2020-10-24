@@ -81,7 +81,7 @@ class RequestHandler
         if(Config::getBool('SENTRY_ON'))//do other stuff for sentry
         {
             sentryInit([
-                'dsn' => 'https://examplePublicKey@o0.ingest.sentry.io/0',
+                'dsn' => Config::get('SENTRY_DNS_PHP'),
                 'environment'=>Config::get('ENV')
             ]);
             $this->chainedExceptionHandler = set_exception_handler(array($this, 'handleException'));
