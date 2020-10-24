@@ -11,6 +11,7 @@ use rizwanjiwan\common\classes\exceptions\RouteException;
 use rizwanjiwan\common\classes\LogManager;
 use function Sentry\init as sentryInit;
 use function Sentry\captureException as sendExceptionToSentry;
+use function Sentry\captureLastError as sendLastErrorToSentry;
 
 class RequestHandler
 {
@@ -108,7 +109,7 @@ class RequestHandler
 		//log error
 		LogManager::setLoggingOn();
 		if($request->log!==null)
-		{
+		{//we don't try to create the log because that might have been what started this error
 			if($fatal)
 				$request->log->error("Fatal: ".$message);
 			else
@@ -116,7 +117,10 @@ class RequestHandler
 		}
 		//output error
 		if($fatal)
-			$request->respondError($message);
+        {
+            sendLastErrorToSentry();
+            $request->respondError($message);
+        }
 	}
 
     /**
