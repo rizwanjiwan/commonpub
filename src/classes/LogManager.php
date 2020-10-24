@@ -222,4 +222,9 @@ class LogManager
         }
     }
 
+    public static function debug($string)
+    {
+        //nothing
+    }
+
 }
