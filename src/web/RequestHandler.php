@@ -23,6 +23,8 @@ class RequestHandler
 
 	private $chainedExceptionHandler; //for chaining to the previous handler if we don't deal with it.
 
+    private $exceptionSentToSentry=false;//true if we send something to sentry to avoid multiple sends.
+
 	private $errorsToFreakOutOver=array(
 		E_ERROR				=>	'Error',
 		E_PARSE				=>	'Parse Error',
@@ -118,7 +120,8 @@ class RequestHandler
 		//output error
 		if($fatal)
         {
-            sendLastErrorToSentry();
+            if($this->exceptionSentToSentry===false)
+                sendLastErrorToSentry();
             $request->respondError($message);
         }
 	}
@@ -130,6 +133,7 @@ class RequestHandler
     public function handleException($e)
     {
         sendExceptionToSentry($e);
+        $this->exceptionSentToSentry=true;
         if ($this->chainedExceptionHandler!==null)
                 call_user_func($this->chainedExceptionHandler, $e);
         else
