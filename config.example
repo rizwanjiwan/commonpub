@@ -13,8 +13,27 @@ CACHE_DIR=/../../../../../tmp/cache/
 VIEW_DIR=/../../../../../src/views/
 TMP_DIR=/../../../../../tmp/
 
+#domain names that user's are allowed to log in from or comment out to allow for any domain
+AUTH_ALLOWED_DOMAINS=developer.com,asd.com
+#comma seperated list of email addresses that can auth or comment out to allow anyone from the domains to auth
+AUTH_ALLOWED_USERS=guy@developer.com,gal@asd.com
 #secret key to use for security purposes while authing
 AUTH_SECRET=[random string +16 char]
+#allow, in dev mode, to bypass login rather than prompting for login
+#LOGIN_BYPASS=[true,false]
+
+#OAUTH Client ids and secrets for each supported service
+#OAUTH_GOOGLE_CLIENT_ID=[from google]
+#OAUTH_GOOGLE_CLIENT_SECRET=[from google]
+#OAUTH_MS_CLIENT_ID=[from microsoft]
+#OAUTH_MS_CLIENT_SECRET=[from microsoft]
+
+#For sending email
+SMTP_LOGIN=[google apps login to send email]
+SMTP_PASSWORD=[google apps password to send email]
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=tls
 
 #namespace where you stash your controllers or you can use the fully qualified name when routing. This just makes your life easier.
 CONTROLER_NAMESPACE=rizwanjiwan\project\controllers\
