@@ -1,6 +1,6 @@
 <?php
 /**
- * Allows itteration over a bunch of objects easily
+ * Allows iteration over a bunch of objects easily
  */
 
 namespace rizwanjiwan\common\classes;
