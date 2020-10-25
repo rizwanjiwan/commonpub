@@ -4,6 +4,7 @@
  */
 namespace rizwanjiwan\common\web\routes;
 
+use rizwanjiwan\common\classes\UserIdentity;
 use rizwanjiwan\common\web\Request;
 use rizwanjiwan\common\web\Route;
 
@@ -27,7 +28,7 @@ class ViewRoute extends Route
 		$request->log->debug('Route to view '.$this->getTarget());
 		$request->respondView($this->getTarget(),
 			array(
-				'user'=>$request->user,
+				'user'=>UserIdentity::singleton(),
 				'routeParams'=>$request->routeParams)
 		);
 	}
