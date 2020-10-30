@@ -26,7 +26,7 @@ class RequestVariableFilter implements Filter
      */
     private $errors=array();
 
-    public function create()
+    public static function create()
     {
         return new self();
     }
