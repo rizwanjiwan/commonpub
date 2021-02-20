@@ -98,11 +98,11 @@ class UserIdentity
      * @param $name string name of the user
      * @param $domain string domain name for the user
      * @param $email string email of the user
-     * @param $picture string url to the user's picture
+     * @param $picture ?string url to the user's picture
      * @param $method int the METHOD_* of managing identity
      * @throws AuthorizationException if there is an issue due to the user's access
      */
-    public function setIdentity(string $name,string $domain, string $email,string $picture,int $method)
+    public function setIdentity(string $name,string $domain, string $email,?string $picture,int $method)
     {
         $this->log->info('Logged in by setIdentity: '.$email);
         //make sure they're from an allowed domain
