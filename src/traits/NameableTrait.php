@@ -9,7 +9,7 @@ use rizwanjiwan\common\classes\exceptions\NameableException;
 trait NameableTrait
 {
 
-	private string $name;
+	private ?string $name=null;
 	private ?string $friendlyName=null;
 
 	/**
