@@ -5,6 +5,7 @@ namespace rizwanjiwan\common\traits;
 
 
 use Exception;
+use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\GenericProvider;
 use League\OAuth2\Client\Provider\GoogleUser;
 use Microsoft\Graph\Exception\GraphException;
@@ -148,9 +149,9 @@ trait AuthenticationTrait
     /**
      * @param $method int UserIdentity::METHOD_*
      * @param $callback string url to send the callback.
-     * @return GenericProvider|null Null if the method isn't valid
+     * @return AbstractProvider|null Null if the method isn't valid
      */
-    private function createProvider(int $method,string $callback):?GenericProvider
+    private function createProvider(int $method,string $callback):?AbstractProvider
     {
         $provider=null;
         if($method===UserIdentity::METHOD_GOOGLE)
