@@ -11,9 +11,9 @@ class IPHelper
 {
 	/**
 	 * Get the client IP while accounting for Cloudflare proxy
-	 * @return mixed
+	 * @return ?string
 	 */
-	public static function getClientIp()
+	public static function getClientIp():?string
 	{
 		if (array_key_exists('HTTP_CF_CONNECTING_IP',$_SERVER))
 			return $_SERVER['HTTP_CF_CONNECTING_IP'];

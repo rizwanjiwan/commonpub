@@ -19,11 +19,11 @@ class EmailHelper implements FormatHelper
 	const FORMAT_HOST_ONLY=1;
 	const FORMAT_USER_ONLY=2;
 
-	private $valueUnformatted=null;
-	private $errorReason=null;
+	private ?string $valueUnformatted=null;
+	private ?string $errorReason=null;
 
 	//key=>value for faster lookups
-	private static $invalidLogins=
+	private static array $invalidLogins=
 		array(
 			'pleaseask'=>1,
 			'nomail'=>1,
@@ -36,7 +36,7 @@ class EmailHelper implements FormatHelper
 			'askme'=>1,
 			'fake'=>1
 		);
-	private static $invalidHosts=
+	private static array $invalidHosts=
 		array(
 			'askme.com'=>1,
 			'noemail.com'=>1,
@@ -47,7 +47,7 @@ class EmailHelper implements FormatHelper
 			'fake.ca'=>1,
 			'fake.com'=>1
 		);
-	private static $invalidAddresses=
+	private static array $invalidAddresses=
 		array(
 			'test@gmail.com'=>1
 		);
@@ -56,7 +56,7 @@ class EmailHelper implements FormatHelper
 	 * EmailHelper constructor.
 	 * @param $value string|null the value to set
 	 */
-	public function __construct($value=null)
+	public function __construct(?string $value=null)
 	{
 		$this->setValue($value);
 	}
@@ -65,7 +65,7 @@ class EmailHelper implements FormatHelper
 	 * Set a value to use in this formatter
 	 * @param $value string the value to use
 	 */
-	public function setValue($value)
+	public function setValue(string $value)
 	{
 		$this->valueUnformatted=$value;
 	}
@@ -74,7 +74,7 @@ class EmailHelper implements FormatHelper
 	 * Check if the set value is valid for this format
 	 * @return boolean true if the value is valid
 	 */
-	public function isValid()
+	public function isValid():bool
 	{
 		$value=$this->getFormatted();
 		if(filter_var($value, FILTER_VALIDATE_EMAIL)===false)
@@ -101,25 +101,25 @@ class EmailHelper implements FormatHelper
 	/**
 	 * @return string|null human friendly reason why the format is invalid. Null if it is valid or you never checked.
 	 */
-	public function getInvalidFormatReason()
+	public function getInvalidFormatReason():?string
 	{
 		return $this->errorReason;
 	}
 
 	/**
-	 * @param int $format The email format to use (see self::FORMAT_*)
+	 * @param ?int $format_type The email format to use (see self::FORMAT_*)
 	 * @return string the value formatted appropriately. Will do best effort if isValid() doesn't return true
 	 */
-	public function getFormatted($format=null)
+	public function getFormatted(int $format_type=null):string
 	{
-	    if($format===null)
-	        $format=self::FORMAT_NORMAL;
+	    if($format_type===null)
+	        $format_type=self::FORMAT_NORMAL;
 		$value=strtolower(trim($this->valueUnformatted));
-		if($format===self::FORMAT_NORMAL)
+		if($format_type===self::FORMAT_NORMAL)
 			return $value;
 		//they want host or user only
 		$parts=explode('@',$value);
-		if($format===self::FORMAT_HOST_ONLY)
+		if($format_type===self::FORMAT_HOST_ONLY)
 			return $parts[1];	//host
 		return $parts[0];	//user
 	}
@@ -134,7 +134,7 @@ class EmailHelper implements FormatHelper
 	 * @param $attachments EmailAttachment[] of files to send as attachments
 	 * @throws MailException on error sending mail
 	 */
-	public static function sendMail($from,$replyTo,$to,$subject,$body,$attachments=array())
+	public static function sendMail(EmailPerson $from,?EmailPerson $replyTo,NameableContainer $to,string $subject,string $body,array $attachments=array())
 	{
 		if(strcmp(Config::get('ENV'),'prod')===0)
 		{
@@ -187,7 +187,7 @@ class EmailHelper implements FormatHelper
 	 * @param $obj stdClass
 	 * @return bool true if it's good.
 	 */
-	private static function validateSendMailJob($obj)
+	private static function validateSendMailJob(stdClass $obj):bool
 	{
 		if($obj===null)
 			return false;
@@ -208,19 +208,19 @@ class EmailHelper implements FormatHelper
 		return false;
 	}
 
-	/**
-	 * Send an email though the job pool
-	 * @param $pool string the job poool to use
-	 * @param $from EmailPerson from address
-	 * @param $replyTo EmailPerson|null where replies should go. null if same as from
-	 * @param $to NameableContainer of EmailPerson - the addresses to send to
-	 * @param $subject string subject
-	 * @param $body string html body
-	 * @param $attachment null unused but placeholder for the future
-	 * @param null|int $priority The priority you want to assign to this job or null for default (1024)
-	 * @param null|int $delay the delay in seconds you want to assign to this job or null for default (0)
-	 */
-	public static function createSendMailJob($pool,$from,$replyTo,$to,$subject,$body,$attachment=null,$priority=null,$delay=null)	//todo: add attachment support
+    /**
+     * Send an email though the job pool
+     * @param $pool string the job pool to use
+     * @param $from EmailPerson from address
+     * @param $replyTo EmailPerson|null where replies should go. null if same as from
+     * @param $to NameableContainer of EmailPerson - the addresses to send to
+     * @param $subject string subject
+     * @param $body string html body
+     * @param array|null $attachment null unused but placeholder for the future
+     * @param null|int $priority The priority you want to assign to this job or null for default (1024)
+     * @param null|int $delay the delay in seconds you want to assign to this job or null for default (0)
+     */
+	public static function createSendMailJob(string $pool,EmailPerson $from,?EmailPerson $replyTo,NameableContainer $to,string $subject,string $body,?array $attachment=null,?int $priority=null,?int $delay=null)	//todo: add attachment support
 	{
 		if(strcmp(Config::get('ENV'),'prod')===0)
 		{
@@ -247,7 +247,7 @@ class EmailHelper implements FormatHelper
 	 * @param $obj stdClass
 	 * @throws MailException
 	 */
-	public static function doSendMailJob($obj)
+	public static function doSendMailJob(stdClass $obj)
 	{
 		if(strcmp(Config::get('ENV'),'prod')===0)
 		{

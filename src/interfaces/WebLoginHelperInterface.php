@@ -16,14 +16,14 @@ interface WebLoginHelperInterface
 	 * @param $serviceReponseUrl string the URL on OUR server where the 3rd party response should be redirected to
 	 * @return string the html to output
 	 */
-	public function getLoginHtml($serviceReponseUrl);
+	public function getLoginHtml(string $serviceReponseUrl):string;
 
 	/**
 	 * Should be called on the $serviceResponseUrl from $this->getLoginHtml. Will set UserIdenity if successful.
 	 * @return UserIdentity
 	 * @throws \Exception on error/invalid login
 	 */
-	public function processServiceResponse();
+	public function processServiceResponse():UserIdentity;
 
 	public function processLogout();
 

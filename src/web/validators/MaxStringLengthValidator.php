@@ -12,9 +12,9 @@ use rizwanjiwan\common\classes\NameableContainer;
 
 class MaxStringLengthValidator implements Validator
 {
-	private $maxLength=9999999999;
+	private int $maxLength=9999999999;
 
-	public function __construct($maxLength)
+	public function __construct(int $maxLength)
 	{
 		$this->maxLength=$maxLength;
 	}
@@ -25,7 +25,7 @@ class MaxStringLengthValidator implements Validator
 	 * @param $fields NameableContainer of AbstractField for the other fields values that might be needed in validation
 	 * @throws InvalidValueException if not valid
 	 */
-	public function validate($field,$fields)
+	public function validate(AbstractField $field, NameableContainer $fields)
 	{
 		$len=strlen($field->getValue());
 		if($len>$this->maxLength)

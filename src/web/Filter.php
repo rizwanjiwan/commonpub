@@ -15,5 +15,5 @@ interface Filter extends Nameable
 	 * (e.g. output error, redirect to url, etc.) and stopping further execution if warented.
 	 * @param $request Request the request
 	 */
-	public function filter($request);
+	public function filter(Request $request);
 }

@@ -6,23 +6,31 @@
 namespace rizwanjiwan\common\web\fields;
 
 
-class SelectOption
-{
-	public $name=null;
-	public $friendlyName=null;
-	public $selectedByDefault=false;
+use rizwanjiwan\common\classes\exceptions\NameableException;
+use rizwanjiwan\common\interfaces\Nameable;
+use rizwanjiwan\common\traits\NameableTrait;
 
-	public $dataFields=array();
+class SelectOption implements Nameable
+{
+    use NameableTrait;
+	public bool $selectedByDefault=false;
+
+	public array $dataFields=array();
 	/**
 	 * SelectOption constructor.
 	 * @param $name string unique internal name to use
 	 * @param $friendlyName string user facing name to use
 	 * @param bool $selectByDefault should this option be selected by default
 	 */
-	public function __construct($name,$friendlyName,$selectByDefault=false)
+	public function __construct(string $name,string $friendlyName,$selectByDefault=false)
 	{
-		$this->name=$name;
-		$this->friendlyName=$friendlyName;
+        try
+        {
+            $this->setUniqueName($name);//never throws but need to surround
+        } catch (NameableException $e)
+        {
+        }
+        $this->setFriendlyName($friendlyName);
 		$this->selectedByDefault=$selectByDefault;
 	}
 
@@ -31,7 +39,7 @@ class SelectOption
 	 * @param $name string name of the data field
 	 * @param $value string value of the data field
 	 */
-	public function addDataField($name,$value)
+	public function addDataField(string $name,string $value)
 	{
 		$this->dataFields[$name]=$value;
 	}

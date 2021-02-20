@@ -15,17 +15,17 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	/**
 	 * @var Nameable[] with the index being the string name
 	 */
-	private $items=array();
+	private array $items=array();
 
 	/**
 	 * @var int index into $keys for iterating
 	 */
-	private $index=0;
+	private int $index=0;
 
 	/**
 	 * @var string[] Keys for $items
 	 */
-	private $keys=array();
+	private array $keys=array();
 
 	/**
 	 * Nice way to chain calls easily through using this as a constructor
@@ -33,7 +33,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * @param null|string $friendlyName provide a friendly name to override the default and use this as a Nameable
 	 * @return NameableContainer to use
 	 */
-	public static function create($uniqueName=null,$friendlyName=null)
+	public static function create(?string $uniqueName=null,?string $friendlyName=null):NameableContainer
 	{
 		return new static($uniqueName,$friendlyName);
 	}
@@ -43,7 +43,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * @param null|string $uniqueName provide a unique name to override the default and use this as a Nameable
 	 * @param null|string $friendlyName provide a friendly name to override the default and use this as a Nameable
 	 */
-	public function __construct($uniqueName=null,$friendlyName=null)
+	public function __construct(?string $uniqueName=null,?string $friendlyName=null)
 	{
 		if($uniqueName!==null)
 		{
@@ -67,7 +67,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * @param bool $overwrite true to allow overwriting if something already exists with the same name
 	 * @return $this to allow for chainable adds.
 	 */
-	public function add($nameable,$overwrite=false)
+	public function add(?Nameable $nameable,bool $overwrite=false):self
 	{
 		if($nameable===null)
 			return $this;// don't add nulls
@@ -85,7 +85,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * @param $nameable Nameable
 	 * @return $this to allow for chainable removes.
 	 */
-	public function remove($nameable)
+	public function remove(Nameable $nameable):self
 	{
 		$uniqueName=$nameable->getUniqueName();
 		if(!array_key_exists($uniqueName,$this->items))	//only remove things we actually have
@@ -98,7 +98,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * Merge another NameableContainer into this container
 	 * @param $container NameableContainer to merge in
 	 */
-	public function merge($container)
+	public function merge(NameableContainer $container)
 	{
 		foreach($container as $namable)
 			$this->add($namable);
@@ -108,7 +108,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * Get the names of the items contained in this datastructure
 	 * @return string[]
 	 */
-	public function getNames()
+	public function getNames():array
 	{
 		return array_keys($this->items);
 	}
@@ -117,7 +117,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * @param $name string name to check for
 	 * @return true if it is in here
 	 */
-	public function contains($name)
+	public function contains(string $name):bool
 	{
 		return array_key_exists($name,$this->items);
 	}
@@ -126,7 +126,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * @param $name string the name of the item you want
 	 * @return Nameable|null The stored Nameable or null if not found
 	 */
-	public function get($name)
+	public function get(string $name):?Nameable
 	{
 		if($this->contains($name))
 			return $this->items[$name];
@@ -138,7 +138,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * @return Nameable
 	 * @since 5.0.0
 	 */
-	public function current()
+	public function current():Nameable
 	{
 		return $this->items[$this->keys[$this->index]];
 	}
@@ -160,7 +160,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * @return mixed scalar on success, or null on failure.
 	 * @since 5.0.0
 	 */
-	public function key()
+	public function key():int
 	{
 		return $this->index;
 	}
@@ -172,7 +172,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * Returns true on success or false on failure.
 	 * @since 5.0.0
 	 */
-	public function valid()
+	public function valid():bool
 	{
 		return $this->index<count($this->keys);
 	}
@@ -199,7 +199,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * The return value is cast to an integer.
 	 * @since 5.1.0
 	 */
-	public function count()
+	public function count():int
 	{
 		return count($this->items);
 	}

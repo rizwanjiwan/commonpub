@@ -16,13 +16,13 @@ class CsrfFilter implements Filter
 {
 	use NameableTrait;
 
-	private $redirect;
+	private mixed $redirect;
 
 	/**
 	 * CsfrFilter constructor.
 	 * @param string|object $response where you want to redirect the user to if this fails. If object, assumes you want to output a json error.
 	 */
-	public function __construct($response='/')
+	public function __construct(mixed $response='/')
 	{
 		$this->redirect=$response;
 	}
@@ -32,7 +32,7 @@ class CsrfFilter implements Filter
 	 * (e.g. output error, redirect to url, etc.) and stopping further execution if warented.
 	 * @param $request Request the request
 	 */
-	public function filter($request)
+	public function filter(Request $request)
 	{
 		$csrf=new Csrf();
 

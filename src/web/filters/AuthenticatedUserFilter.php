@@ -17,13 +17,13 @@ class AuthenticatedUserFilter implements Filter
 
 	use NameableTrait;
 
-	private $redirectUrl;
+	private string $redirectUrl;
 
 	/**
 	 * AuthenticatedUserFilter constructor.
 	 * @param $redirectUrl string the URL to redirect the user to for the authentication trait controller to take over.
 	 */
-	public function __construct($redirectUrl='/auth/')
+	public function __construct(string $redirectUrl='/auth/')
 	{
 		$this->redirectUrl=$redirectUrl;
 	}
@@ -33,7 +33,7 @@ class AuthenticatedUserFilter implements Filter
 	 * (e.g. output error, redirect to url, etc.) and stopping further execution if warented.
 	 * @param $request Request the request
 	 */
-	public function filter($request)
+	public function filter(Request $request)
 	{
 	    $user=UserIdentity::singleton();
 		if($user->isAuthed()===false)

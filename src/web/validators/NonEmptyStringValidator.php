@@ -12,13 +12,13 @@ use rizwanjiwan\common\classes\NameableContainer;
 
 class NonEmptyStringValidator implements Validator
 {
-	private $errorMessage;
+	private string $errorMessage;
 
 	/**
 	 * NonEmptyStringValidator constructor.
 	 * @param string $errorMessage the error message to display if this fails
 	 */
-	public function __construct($errorMessage='Can\'t be empty')
+	public function __construct(string $errorMessage='Can\'t be empty')
 	{
 		$this->errorMessage=$errorMessage;
 	}
@@ -29,7 +29,7 @@ class NonEmptyStringValidator implements Validator
 	 * @param $fields NameableContainer of AbstractField for the other fields values that might be needed in validation
 	 * @throws InvalidValueException if not valid
 	 */
-	public function validate($field,$fields)
+	public function validate(AbstractField $field,NameableContainer $fields)
 	{
 		$val=$field->getValue();
 		if(is_array($val))//convert the best we can to a string

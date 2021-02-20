@@ -12,11 +12,11 @@ interface Nameable
 	 * A friendly name for the end user to see
 	 * @return string friendly name
 	 */
-	public function getFriendlyName();
+	public function getFriendlyName():string;
 
 	/**
 	 * A name for use that is unique
 	 * @return string name
 	 */
-	public function getUniqueName();
+	public function getUniqueName():string;
 }

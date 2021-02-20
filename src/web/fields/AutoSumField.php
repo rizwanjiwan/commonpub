@@ -10,14 +10,14 @@ namespace rizwanjiwan\common\web\fields;
 class AutoSumField extends AbstractAutoFillField
 {
 
-	private $values=array();//key value of field names and their associated value to tally as we go
+	private array $values=array();//key value of field names and their associated value to tally as we go
 
 	/**
 	 * AutoFillTextField constructor. This only works on one field
 	 * @param $delegateField AbstractField we're wrapping in an autofill
 	 * @param $lookupFields string[]  field names that when changed should trigger a lookup by the framework
 	 */
-	public function __construct($delegateField, $lookupFields)
+	public function __construct(AbstractField $delegateField, array $lookupFields)
 	{
 		parent::__construct($delegateField, $lookupFields);
 		foreach($lookupFields as $fieldName)
@@ -31,7 +31,7 @@ class AutoSumField extends AbstractAutoFillField
 	 * @param $set boolean true if you want to set this value in the delegated field as well as look it up
 	 * @return null|string|string[] the value
 	 */
-	public function determineValue($fieldName, $fieldValue, $set = false)
+	public function determineValue(string $fieldName, string $fieldValue, bool$set = false):string|array|null
 	{
 		if(strlen($fieldValue)>0)//update this field value
 		{

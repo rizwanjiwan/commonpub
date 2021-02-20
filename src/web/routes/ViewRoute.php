@@ -14,7 +14,7 @@ class ViewRoute extends Route
 	/**
 	 * @return int the type of Route this is (ROUTE_TYPE_* constants)
 	 */
-	public function getType()
+	public function getType():int
 	{
 		return self::ROUTE_TYPE_VIEW;
 	}
@@ -23,7 +23,7 @@ class ViewRoute extends Route
 	 * Do the actual routing work
 	 * @param $request Request
 	 */
-	public function doRouting($request)
+	public function doRouting(Request $request)
 	{
 		$request->log->debug('Route to view '.$this->getTarget());
 		$request->respondView($this->getTarget(),

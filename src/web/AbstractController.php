@@ -27,7 +27,7 @@ abstract class AbstractController
 	 * @param $methodName string the method to invoke
 	 * @throws RouteException
 	 */
-	public final function handle($request,$methodName)
+	public final function handle(Request $request,string $methodName)
 	{
 		if(method_exists($this,$methodName)===false)
 			throw new RouteException("$methodName unknown");
@@ -44,6 +44,6 @@ abstract class AbstractController
 	 * appropriate methods in Request before calling the filters to be run in Request.
 	 * @return NameableContainer of Filter to have setup by default in each request
 	 */
-	public abstract function getFilters();
+	public abstract function getFilters():NameableContainer;
 
 }

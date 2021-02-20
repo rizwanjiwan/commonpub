@@ -29,15 +29,15 @@ abstract class Route
 	/**
 	 * @var string
 	 */
-	private $url;
+	private string $url;
 	/**
 	 * @var string
 	 */
-	private $target;
+	private string $target;
 	/**
 	 * @var string[] associative key=>value pairs
 	 */
-	private $parameters;
+	private array $parameters;
 
 	/**
 	 * Route constructor.
@@ -45,7 +45,7 @@ abstract class Route
 	 * @param $target string the target this route is for. For views it's the Blade notation to get to the blade file. For controllers is Class.method. For redirects it's the redirect to send to the $request->redirect
 	 * @param $parameters string[] associative key value pairs. They get passed to Controllers in the $request->routeParams and to views as 'routeParams.'
 	 */
-	public function __construct($url,$target,$parameters=array())
+	public function __construct(string $url, string $target, array $parameters=array())
 	{
 		$this->url=$url;
 		$this->target=$target;
@@ -55,19 +55,19 @@ abstract class Route
 	/**
 	 * @return int the type of Route this is (ROUTE_TYPE_* constants)
 	 */
-	public abstract function getType();
+	public abstract function getType():int;
 
 	/**
 	 * Do the actual routing work
 	 * @param $request Request
 	 * @throws RouteException on error
 	 */
-	public abstract function doRouting($request);
+	public abstract function doRouting(Request $request);
 
 	/**
 	 * @return string the url that this route is for
 	 */
-	public function getUrl()
+	public function getUrl():string
 	{
 		return $this->url;
 	}
@@ -75,7 +75,7 @@ abstract class Route
 	/**
 	 * @return string[] associative key value pairs. They get passed to Controllers in the $request->routeParams and to views as 'routeParams.'
 	 */
-	public function getParameters()
+	public function getParameters():array
 	{
 		return $this->parameters;
 	}
@@ -83,7 +83,7 @@ abstract class Route
 	/**
 	 * @return string the target this route is for. For views it's the Blade notation to get to the blade file. For controllers is Class.method.
 	 */
-	public function getTarget()
+	public function getTarget():string
 	{
 		return $this->target;
 	}

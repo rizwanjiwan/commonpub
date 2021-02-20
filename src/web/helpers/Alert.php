@@ -15,9 +15,9 @@ class Alert
     const SESSION_ALERT_MESSAGE='alert.message';
     const SESSION_CLOBBER_IS_ALERT='alert.clobber';
 
-    private $type=self::TYPE_SUCCESS;
-    private $message="";
-    private $canClobber=false;
+    private ?string $type=self::TYPE_SUCCESS;
+    private ?string $message="";
+    private bool $canClobber=false;
 
     /**
      * Alert constructor. Pass values to set the alerts, otherwise it will use sessions to pull up old alerts.
@@ -25,7 +25,7 @@ class Alert
      * @param $message string|null the message to display to the user
      * @param $canClobber true to allow clobbering of this specific alert. This allows you to use Alerts for messages that can/can't be clobbered
      */
-    public function __construct($type=null,$message=null,$canClobber=false)
+    public function __construct(?string $type=null,?string $message=null,bool $canClobber=false)
     {
         if(!isset($_SESSION))
             session_start();
@@ -51,7 +51,7 @@ class Alert
         }
 
     }
-    public function isAlert()
+    public function isAlert():bool
     {
         return $this->type!==null;
     }
@@ -59,7 +59,7 @@ class Alert
     /**
      * @return bool true if there is no alert or the alert can be clobbered
      */
-    public function canClobber()
+    public function canClobber():bool
     {
         return ($this->isAlert()===false)||$this->canClobber;
     }
@@ -67,7 +67,7 @@ class Alert
     /**
      * @return null|string null if there isn't any alert. String is TYPE_*
      */
-    public function getType()//clear out session variables since we're consuming the alerts.
+    public function getType():?string //clear out session variables since we're consuming the alerts.
     {
         unset($_SESSION[self::SESSION_ALERT_TYPE]);
         unset($_SESSION[self::SESSION_ALERT_MESSAGE]);
@@ -77,7 +77,7 @@ class Alert
     /**
      * @return null|string null if there isn't any alert.
      */
-    public function getMessage()//clear out session variables since we're consuming the alerts.
+    public function getMessage():?string//clear out session variables since we're consuming the alerts.
     {
         unset($_SESSION[self::SESSION_ALERT_TYPE]);
         unset($_SESSION[self::SESSION_ALERT_MESSAGE]);

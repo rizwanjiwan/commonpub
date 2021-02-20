@@ -19,7 +19,7 @@ class Config
      * Initialize this static
      * @param string $path path relative to this file to open the config
      */
-	public static function init($path='/../../../../../config')
+	public static function init(string $path='/../../../../../config')
 	{
 		if(self::$envVars!==null)
 			return;
@@ -42,7 +42,7 @@ class Config
 	 * Get the full path to the tmp directory (starts and ends with a '/')
 	 * @return string
 	 */
-	public static function getTmpDir()
+	public static function getTmpDir():string
 	{
 		$tmpDir=self::get('TMP_DIR');
 		if($tmpDir===false)
@@ -56,7 +56,7 @@ class Config
 	 * @param $key string
 	 * @return string|boolean false if key doesn't exist
 	 */
-	public static function get($key)
+	public static function get(string $key):string|bool
 	{
 		self::init();
 		if(array_key_exists($key,self::$envVars))
@@ -68,7 +68,7 @@ class Config
 	 * @param $key string
 	 * @return string[]|boolean false if key doesn't exist
 	 */
-	public static function getArray($key)
+	public static function getArray(string $key): array|bool
 	{
 		$val=self::get($key);
 		if($val===false)
@@ -85,7 +85,7 @@ class Config
 	 * @param $key string key from the config
 	 * @return bool true if value is 'true'
 	 */
-	public static function getBool($key)
+	public static function getBool(string $key):bool
 	{
 		$val=self::get($key);
 		return strcasecmp($val,'true')===0;
@@ -96,7 +96,7 @@ class Config
 	 * @param $key string
 	 * @param $value string
 	 */
-	public static function set($key,$value)
+	public static function set(string $key,string $value)
 	{
 		self::init();
 		self::$envVars[$key]=$value;

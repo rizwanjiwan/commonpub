@@ -25,11 +25,11 @@ class LogManager
     /**
      * @var null|Logger
      */
-    private static $baseLogger=null;
-    private static $loggingOn=true;
+    private static ?Logger $baseLogger=null;
+    private static bool $loggingOn=true;
 
-    private static $htmlLogging=false;
-    private static $consoleLogging=false;
+    private static bool $htmlLogging=false;
+    private static bool $consoleLogging=false;
 
 
     public static function htmlLogingOn()
@@ -54,7 +54,7 @@ class LogManager
      * @param null|string $name provide a name if you want to be able to have more robust sectioning in logging
      * @return Logger the logger you can use all nice and ready to go
      */
-    public static function createLogger($name=null)
+    public static function createLogger($name=null):Logger
     {
         if(self::$baseLogger===null)
         {

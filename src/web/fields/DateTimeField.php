@@ -7,6 +7,7 @@ namespace rizwanjiwan\common\web\fields;
 
 
 
+use Exception;
 use rizwanjiwan\common\classes\exceptions\InvalidValueException;
 use rizwanjiwan\common\classes\NameableContainer;
 use Carbon\Carbon;
@@ -14,12 +15,19 @@ use DateTime;
 
 class DateTimeField extends AbstractField
 {
-	protected $value=null;
-	protected $defaultValue=null;
-	private $isNull=false;
-	private $isInvalidDateTime=false;
+	protected DateTime|null $value=null;
+	protected DateTime|null $defaultValue=null;
+	private bool $isNull=false;
+	private bool $isInvalidDateTime=false;
 
-	public function __construct($uniqueName,$friendlyName,$defaultValue=null)
+    /**
+     * DateTimeField constructor.
+     * @param string $uniqueName
+     * @param string $friendlyName
+     * @param string|null $defaultValue
+     * @throws Exception
+     */
+	public function __construct(string $uniqueName,string $friendlyName,?string $defaultValue=null)
 	{
 		parent::__construct($uniqueName,$friendlyName);
 		$this->isNull=$defaultValue===null;
@@ -36,7 +44,7 @@ class DateTimeField extends AbstractField
 	 * @param $value mixed to save
 	 * @return DateTimeField $this
 	 */
-	public function setValue($value)
+	public function setValue(mixed $value):self
 	{
 		$this->isNull=false;
 		if($value instanceof DateTime)
@@ -51,7 +59,7 @@ class DateTimeField extends AbstractField
 			{
 				$this->value=new DateTime($value);
 			}
-			catch(\Exception $e)
+			catch(Exception $e)
 			{
 				$this->isNull=true;
 				$this->isInvalidDateTime=true;
@@ -65,7 +73,7 @@ class DateTimeField extends AbstractField
 	 * @param $otherFields NameableContainer all the fields in case validation depends on another value
 	 * @throws InvalidValueException
 	 */
-	public function validate($otherFields)
+	public function validate(NameableContainer $otherFields)
 	{
 		if($this->isInvalidDateTime)
 			throw new InvalidValueException('Invalid date format');
@@ -73,9 +81,8 @@ class DateTimeField extends AbstractField
 	}
 	/**
 	 * Get back out a previously stored value.
-	 * @return string value
 	 */
-	public function getValue()
+	public function getValue():?string
 	{
 		if($this->isNull)
 			return null;
@@ -85,11 +92,11 @@ class DateTimeField extends AbstractField
 	/**
 	 * @return DateTime the date time contained in $this
 	 */
-	public function getDateTime()
+	public function getDateTime():DateTime
 	{
 		return $this->value;
 	}
-	public function getValuePrintable()
+	public function getValuePrintable():string|null
 	{
 		if($this->isNull)
 			return null;

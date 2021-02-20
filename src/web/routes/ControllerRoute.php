@@ -16,7 +16,7 @@ class ControllerRoute extends Route
 	/**
 	 * @return int the type of Route this is (ROUTE_TYPE_* constants)
 	 */
-	public function getType()
+	public function getType():int
 	{
 		return self::ROUTE_TYPE_CONTROLLER;
 	}
@@ -26,7 +26,7 @@ class ControllerRoute extends Route
 	 * @param $request Request
 	 * @throws RouteException on error
 	 */
-	public function doRouting($request)
+	public function doRouting(Request $request)
 	{
 		$request->log->debug('Route to controller '.$this->getTarget());
 		$targetParts=explode('.',$this->getTarget());

@@ -4,6 +4,7 @@
 namespace rizwanjiwan\common\classes;
 
 
+use Monolog\Logger;
 use rizwanjiwan\common\classes\exceptions\AuthorizationException;
 use Exception;
 use rizwanjiwan\common\traits\SingeltonTrait;
@@ -16,14 +17,14 @@ class UserIdentity
     const METHOD_AZURE_AD=2;
     const METHOD_DEV_MODE=3;
 
-    private $name=null;
-    private $domain=null;
-    private $email=null;
-    private $picture=null;
-    private $secret=null;
-    private $isAuthed=false;
-    private $method=null;
-    private $log;
+    private ?string $name=null;
+    private ?string $domain=null;
+    private ?string $email=null;
+    private ?string $picture=null;
+    private ?string $secret=null;
+    private bool $isAuthed=false;
+    private ?int $method=null;
+    private Logger $log;
 
     /**
      * UserIdentity constructor.
@@ -101,7 +102,7 @@ class UserIdentity
      * @param $method int the METHOD_* of managing identity
      * @throws AuthorizationException if there is an issue due to the user's access
      */
-    public function setIdentity($name,$domain, $email,$picture,$method)
+    public function setIdentity(string $name,string $domain, string $email,string $picture,int $method)
     {
         $this->log->info('Logged in by setIdentity: '.$email);
         //make sure they're from an allowed domain
@@ -162,10 +163,10 @@ class UserIdentity
 
     /**
      * Take any number of string parameters and generates a secure token which can later be used to validate against the same parameters in the future
-     * @param string[] ...$params order matters
+     * @param string[] $params order matters
      * @return string the token
      */
-    private function generateToken(...$params)
+    private function generateToken(...$params):string
     {
         $string='';
         foreach($params as $param)
@@ -178,10 +179,10 @@ class UserIdentity
     /**
      * Validate a previously generated token
      * @param string $token the token to validate
-     * @param string[] ...$params as sent to genreateToken. Order matters
+     * @param string[] $params as sent to genreateToken. Order matters
      * @return boolean true if it's valid
      */
-    private function validateToken($token,...$params)
+    private function validateToken(string $token,...$params):bool
     {
         $string='';
         foreach($params as $param)
@@ -192,27 +193,27 @@ class UserIdentity
         return password_verify($string,$token);
     }
 
-    public function isAuthed()
+    public function isAuthed():bool
     {
         return $this->isAuthed;
     }
-    public function isDeveloper()
+    public function isDeveloper():bool
     {
         return strcmp($this->getDomain(),'jiwan.ca')===0;
     }
-    public function getName()
+    public function getName():?string
     {
         return $this->name;
     }
-    public function getDomain()
+    public function getDomain():?string
     {
         return $this->domain;
     }
-    public function getEmail()
+    public function getEmail():?string
     {
         return $this->email;
     }
-    public function getPicture()
+    public function getPicture():?string
     {
         return $this->picture;
     }
@@ -226,7 +227,7 @@ class UserIdentity
     /**
      * Get the method as a user friendly name
      */
-    public function getMethodName()
+    public function getMethodName():string
     {
         if($this->method===null)
             return 'Not logged in.';

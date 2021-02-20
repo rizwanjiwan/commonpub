@@ -14,11 +14,11 @@ class ValueValidator  implements Validator
 	const CONDITION_EQUALS=1;
 	const CONDITION_NOT_EQUALS=2;
 
-	private $condition=self::CONDITION_EQUALS;
-	private $message='Error';
-	private $value=null;
+	private int $condition=self::CONDITION_EQUALS;
+	private string $message='Error';
+	private string|array $value;
 
-	public function __construct($value,$condition,$message='Error')
+	public function __construct(string|array $value,int $condition, string $message='Error')
 	{
 		$this->value=$value;
 		$this->condition=$condition;

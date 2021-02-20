@@ -15,7 +15,7 @@ class Csrf
 {
 	const CSRF_TOKEN_KEY='__csfr_token';
 
-	private $failureReason=null;
+	private ?string $failureReason=null;
 
 	public function __construct()
 	{
@@ -28,7 +28,7 @@ class Csrf
      * @return string the token
      * @throws Exception
      */
-	public function getToken()
+	public function getToken():string
 	{
 		if (empty($_SESSION[self::CSRF_TOKEN_KEY]))
 			$_SESSION[self::CSRF_TOKEN_KEY] = bin2hex(random_bytes(32));
@@ -40,7 +40,7 @@ class Csrf
 	 * @param $token string the earlier provided token passed through the form.
 	 * @return bool true if valid
 	 */
-	public function isValid($token)
+	public function isValid(string $token):bool
 	{
 		$this->failureReason=null;
 		if (empty($_SESSION[self::CSRF_TOKEN_KEY]))
@@ -61,7 +61,7 @@ class Csrf
 	 * Validate a token sent by a post (uses super global $_POST)
 	 * @return true if valid
 	 */
-	public function isValidPost()
+	public function isValidPost():bool
 	{
 		return $this->check($_POST)||$this->check($_GET);
 
@@ -71,11 +71,11 @@ class Csrf
 	 * In the event of a failed CSFR check, get the failure reason
 	 * @return null|string the reason why isValid or isValidPost Failed
 	 */
-	public function getFailureReason()
+	public function getFailureReason():?string
 	{
 		return $this->failureReason;
 	}
-	private function check($var)
+	private function check(array $var):bool
 	{
 		return (array_key_exists(self::CSRF_TOKEN_KEY,$var))&&
 		($this->isValid($var[self::CSRF_TOKEN_KEY]));

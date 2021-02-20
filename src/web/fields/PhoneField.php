@@ -14,13 +14,13 @@ class PhoneField  extends TextField
 	 * Get back out a previously stored value.
 	 * @return string value
 	 */
-	public function getValue()
+	public function getValue():string
 	{
 		$orginal=parent::getValue();
 		return (new PhoneHelper($orginal))->getFormatted(PhoneHelper::FORMAT_NUMBERS_ONLY);
 	}
 
-	public function getValuePrintable()
+	public function getValuePrintable():string
 	{
 		$orginal=parent::getValue();
 		return (new PhoneHelper($orginal))->getFormatted();

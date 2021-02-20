@@ -12,8 +12,8 @@ use rizwanjiwan\common\classes\exceptions\FileNotExistException;
 class EmailAttachment
 {
 
-	private $path;
-	private $fileNameOverride;
+	private string $path;
+	private ?string $fileNameOverride;
 
 	/**
 	 * EmailAttachment constructor.
@@ -21,7 +21,7 @@ class EmailAttachment
 	 * @param $fileNameOverride string|null a file name to use for the file when attached
 	 * @throws FileNotExistException if file doesn't exist
 	 */
-	public function __construct($path, $fileNameOverride=null)
+	public function __construct(string $path, ?string $fileNameOverride=null)
 	{
 		if(file_exists($path)===false)
 			throw new FileNotExistException('File must exist to be an attachment: '.$path);
@@ -36,16 +36,16 @@ class EmailAttachment
 	 * @return EmailAttachment
 	 * @throws FileNotExistException if file doesn't exist
 	 */
-	public static function create($path, $fileNameOverride=null)
+	public static function create(string $path, ?string $fileNameOverride=null):EmailAttachment
 	{
 			return new self($path,$fileNameOverride);
 	}
 
-	public function path()
+	public function path():string
 	{
 		return $this->path;
 	}
-	public function fileName()
+	public function fileName():string
 	{
 		if($this->fileNameOverride!==null)
 			return $this->fileNameOverride;

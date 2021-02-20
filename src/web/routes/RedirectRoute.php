@@ -11,9 +11,9 @@ use rizwanjiwan\common\web\Route;
 class RedirectRoute extends Route
 {
 
-	private $code=301;
-	private $alert=null;
-	private $alertType=Alert::TYPE_INFO;
+	private int $code=301;
+	private ?string $alert=null;
+	private string $alertType=Alert::TYPE_INFO;
 
 	/**
 	 * Route constructor. Defaults to 301 redirect. Pass 'code'=>[int] as a parameter for a different redirect code like 302. You can also throw up an alert when this redirect happens with 'alert'=>string and 'alert_type'=>Alert::TYPE_*.
@@ -21,7 +21,7 @@ class RedirectRoute extends Route
 	 * @param $target string the target this route is for. For views it's the Blade notation to get to the blade file. For controllers is Class.method. For redirects it's the redirect to send to the $request->redirect
 	 * @param $parameters string[] associative key value pairs. They get passed to Controllers in the $request->routeParams and to views as 'routeParams.'
 	 */
-	public function __construct($url,$target,$parameters=array())
+	public function __construct(string $url,string $target,array $parameters=array())
 	{
 		parent::__construct($url,$target,$parameters);
 		if(array_key_exists('code',$parameters))
@@ -35,7 +35,7 @@ class RedirectRoute extends Route
 	/**
 	 * @return int the type of Route this is (ROUTE_TYPE_* constants)
 	 */
-	public function getType()
+	public function getType():int
 	{
 		return self::ROUTE_TYPE_REDIRECT;
 	}
@@ -44,7 +44,7 @@ class RedirectRoute extends Route
 	 * Do the actual routing work
 	 * @param $request Request
 	 */
-	public function doRouting($request)
+	public function doRouting(Request $request)
 	{
 		if($this->alert!==null)
 			new Alert($this->alertType,$this->alert);

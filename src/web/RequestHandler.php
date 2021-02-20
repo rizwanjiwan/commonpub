@@ -19,13 +19,13 @@ class RequestHandler
 	/**
 	 * @var array key=>value of string url and the associated Route.
 	 */
-	private $routes=array();
+	private array $routes=array();
 
 	private $chainedExceptionHandler; //for chaining to the previous handler if we don't deal with it.
 
-    private $exceptionSentToSentry=false;//true if we send something to sentry to avoid multiple sends.
+    private bool $exceptionSentToSentry=false;//true if we send something to sentry to avoid multiple sends.
 
-	private $errorsToFreakOutOver=array(
+	private array $errorsToFreakOutOver=array(
 		E_ERROR				=>	'Error',
 		E_PARSE				=>	'Parse Error',
 		E_CORE_ERROR		=>	'Core Error',
@@ -36,7 +36,7 @@ class RequestHandler
 		E_USER_ERROR		=>	'User Error'
 	);
 
-	private $otherErrors=array(
+	private array $otherErrors=array(
 		E_WARNING			=>	'Warning',
 		E_NOTICE			=>	'Notice',
 		E_USER_WARNING		=>	'User Warning',
@@ -59,7 +59,7 @@ class RequestHandler
 		}
 	}
 
-	private function createRequest()
+	private function createRequest():Request
 	{
 		$request=new Request();
 		$request->log=LogManager::createLogger('Common');
@@ -68,7 +68,7 @@ class RequestHandler
 	/**
 	 * @param $route Route to add
 	 */
-	public function addRoute($route)
+	public function addRoute(Route $route)
 	{
 		//route URLS for our purposes shouldn't start or end with a /
 		$url=trim( $route->getUrl(), "/" );

@@ -10,7 +10,7 @@ class UrlField  extends TextField
 {
 
 
-	public function getValuePrintable()
+	public function getValuePrintable():string
 	{
 		$val=parent::getValuePrintable();
 		if(strlen($val)===0)

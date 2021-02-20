@@ -14,6 +14,6 @@ interface JobProcessorInterface
 	 * Process a job
 	 * @param $data stdClass of the data to use in processing for this job
 	 */
-	public function process($data);
+	public function process(stdClass $data);
 
 }

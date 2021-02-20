@@ -9,14 +9,14 @@ use rizwanjiwan\common\classes\exceptions\NameableException;
 trait NameableTrait
 {
 
-	private $name=null;
-	private $friendlyName=null;
+	private string $name;
+	private ?string $friendlyName=null;
 
 	/**
 	 * A friendly name for the end user to see
-	 * @return string friendly name
+	 * @return ?string friendly name
 	 */
-	public function getFriendlyName()
+	public function getFriendlyName():string
 	{
 		if($this->friendlyName===null)
 		{
@@ -29,7 +29,7 @@ trait NameableTrait
 	 * A name for use that is unique
 	 * @return string name
 	 */
-	public function getUniqueName()
+	public function getUniqueName():string
 	{
 		if($this->name==null)
 		{
@@ -46,7 +46,7 @@ trait NameableTrait
 	 * Provide a friendly name to use
 	 * @param $name string
 	 */
-	protected function setFriendlyName($name)
+	protected function setFriendlyName(?string $name)
 	{
 		$this->friendlyName=$name;
 	}
@@ -56,7 +56,7 @@ trait NameableTrait
 	 * @param $name string
 	 * @throws NameableException if name has already been set/used.
 	 */
-	protected function setUniqueName($name)
+	protected function setUniqueName(string $name)
 	{
 		if($this->name!==null)
 			throw new NameableException("Can't change name after it's been initially set/used");

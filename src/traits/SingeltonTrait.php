@@ -6,13 +6,13 @@ namespace rizwanjiwan\common\traits;
 
 trait SingeltonTrait
 {
-    protected static $singelton=null;
+    protected static ?self $singelton=null;
 
     /**
      * Get the instance
      * @return self
      */
-    public static function singleton()
+    public static function singleton():self
     {
         if(self::$singelton===null)
             self::$singelton = new static();
@@ -34,7 +34,7 @@ trait SingeltonTrait
     /**
      * prevent from being unserialized (which would create a second instance of it)
      */
-    private function __wakeup()
+    public function __wakeup()
     {
     }
 }

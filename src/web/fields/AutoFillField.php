@@ -10,16 +10,16 @@ namespace rizwanjiwan\common\web\fields;
 
 class AutoFillField extends AbstractAutoFillField
 {
-	private $lookupValues=array();
-	private $default;	//the default value if nothing is found from lookup
+	private array $lookupValues=array();
+	private string|array|null $default;	//the default value if nothing is found from lookup
 
 	/**
 	 * AutoFillTextField constructor. This only works on one field
 	 * @param $delegateField AbstractField we're wrapping in an autofill
 	 * @param $lookupField string unique name of the lookup field
-	 * @param mixed $default a value to use as a default if the lookup returns nothing
+	 * @param string|array|null $default a value to use as a default if the lookup returns nothing
 	 */
-	public function __construct($delegateField, $lookupField,$default=null)
+	public function __construct(AbstractField $delegateField, string $lookupField,string|array|null $default=null)
 	{
 		parent::__construct($delegateField, array($lookupField));
 		$this->default=$default;
@@ -31,7 +31,7 @@ class AutoFillField extends AbstractAutoFillField
 	 * @param $thisValue string|string[] the value that this should take if that lookup field is equal to $fieldValue
 	 * @return AutoFillField $this
 	 */
-	public function addLookup($fieldValue, $thisValue)
+	public function addLookup(string $fieldValue, string|array $thisValue):self
 	{
 		$this->lookupValues[$fieldValue]=$thisValue;
 		return $this;
@@ -44,7 +44,7 @@ class AutoFillField extends AbstractAutoFillField
 	 * @param $set boolean true if you want to set this value in the delegated field as well as look it up
 	 * @return null|string|string[] the value
 	 */
-	public function determineValue($fieldName, $fieldValue, $set = false)
+	public function determineValue(string $fieldName, string $fieldValue, bool $set = false):string|array|null
 	{
 		$val=$this->default;
 		if(array_key_exists($fieldValue,$this->lookupValues))

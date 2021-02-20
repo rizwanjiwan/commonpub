@@ -20,7 +20,7 @@ class UrlValidator implements Validator
 	 * @param $fields NameableContainer of AbstractField for the other fields values that might be needed in validation
 	 * @throws InvalidValueException if not valid
 	 */
-	public function validate($field, $fields)
+	public function validate(AbstractField $field,NameableContainer $fields)
 	{
 		$val=trim($field->getValue());
 		if(strlen($val)===0)

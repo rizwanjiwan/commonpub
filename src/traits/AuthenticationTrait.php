@@ -24,18 +24,18 @@ trait AuthenticationTrait
     /**
      * @var Logger
      */
-    private $log;
+    private Logger $log;
 
     public function __construct()
     {
         $this->log=LogManager::createLogger('AuthTrait');
     }
 
-    public static function getRouteParamMethodName()
+    public static function getRouteParamMethodName():string
     {
         return 'method';
     }
-    public static function getRouteParamCallbackName()
+    public static function getRouteParamCallbackName():string
     {
         return 'callback';
     }
@@ -43,7 +43,7 @@ trait AuthenticationTrait
      * Start the login process. Send users here off the button click to log in
      * @param $request Request. Should specify the self::getRouteParamMethodName()=>UserIdentity.METHOD_* and self::getRouteParamCallbackName()=>callback url in the route params
      */
-    public function login($request)
+    public function login(Request $request)
     {
         $routeParams=$request->routeParams;
         $provider=$this->createProvider($routeParams[self::getRouteParamMethodName()],$routeParams[self::getRouteParamCallbackName()]);
@@ -53,7 +53,7 @@ trait AuthenticationTrait
         $request->respondCustom();
     }
 
-    protected function processLogout($request)
+    protected function processLogout(Request $request)
     {
         $identity=UserIdentity::singleton();
         $identity->clearIdentity();
@@ -64,7 +64,7 @@ trait AuthenticationTrait
      * @param $request Request. Should specify the self::getRouteParamMethodName()=>UserIdentity.METHOD_* and self::getRouteParamCallbackName()=>callback url in the route params
      * @throws AuthorizationException
      */
-    protected function processCallback($request)
+    protected function processCallback(Request $request)
     {
         if(array_key_exists('code',$_GET)===false)
             throw new AuthorizationException('Bad callback. Are you sure you clicked the login button?');
@@ -138,7 +138,7 @@ trait AuthenticationTrait
      * @return string the domain part of the email
      * @throws AuthorizationException on invalid email
      */
-    private function emailToDomain($email)
+    private function emailToDomain(string $email):string
     {
         if(($email===null)||(strlen($email===0))||(strpos($email,'@')===false))
             throw new AuthorizationException('Invalid email "'.$email.'" ');
@@ -150,7 +150,7 @@ trait AuthenticationTrait
      * @param $callback string url to send the callback.
      * @return GenericProvider|null Null if the method isn't valid
      */
-    private function createProvider($method,$callback)
+    private function createProvider(int $method,string $callback):?GenericProvider
     {
         $provider=null;
         if($method===UserIdentity::METHOD_GOOGLE)

@@ -20,13 +20,13 @@ class RequestVariableFilter implements Filter
     /**
      * @var array of array of Validators to run where the key is the key into $_REQUEST for the value.
      */
-    private $requirements=array();
+    private array $requirements=array();
     /**
      * @var string[] key is the key into $_REQUEST and value is the error that was thrown from validating.
      */
-    private $errors=array();
+    private array $errors=array();
 
-    public static function create()
+    public static function create():self
     {
         return new self();
     }
@@ -36,7 +36,7 @@ class RequestVariableFilter implements Filter
      * @param $key string what to validate ($_REQUEST[$key])
      * @param null|Validator $validator How to validate or null to just confirm it's set. Validators based on other fields aren't supported at this time.
      */
-    public function addValidation($key,$validator=null)
+    public function addValidation(string $key,?Validator $validator=null)
     {
         if(array_key_exists($key,$this->requirements)===false)
             $this->requirements[$key]=array();
@@ -52,7 +52,7 @@ class RequestVariableFilter implements Filter
      * This will run the validation but not exit. Use isError() etc. to learn about errors
      * @param Request $request
      */
-    public function filter($request)
+    public function filter(Request $request)
     {
         //get all our fields into the nameable container
         $fields=NameableContainer::create();
@@ -86,12 +86,12 @@ class RequestVariableFilter implements Filter
         }
     }
 
-    private function addError($key,$error)
+    private function addError(string $key,string $error)
     {
         $this->errors[$key]=$error;
     }
 
-    public function isError()
+    public function isError():bool
     {
         return count($this->errors)>0;
     }
@@ -100,7 +100,7 @@ class RequestVariableFilter implements Filter
      * Get the errors that may have occured
      * @return string[] key= the key into $_REQUEST and value = error message
      */
-    public function getErrors()
+    public function getErrors():array
     {
         return $this->errors;
     }

@@ -8,11 +8,11 @@ namespace rizwanjiwan\common\web\fields;
 
 class TextField extends AbstractField
 {
-	protected $value=null;
-	protected $defaultValue=null;
-	private $multiLine=false;
+	protected ?string $value=null;
+	protected ?string $defaultValue=null;
+	private bool $multiLine=false;
 
-	public function __construct($uniqueName,$friendlyName,$defaultValue=null)
+	public function __construct(string $uniqueName,$friendlyName,$defaultValue=null)
 	{
 		parent::__construct($uniqueName,$friendlyName);
 		$this->defaultValue=$defaultValue;
@@ -27,7 +27,7 @@ class TextField extends AbstractField
 	 * @param $val bool true if it should be multi line.
 	 * @return $this for easy chaining
 	 */
-	public function setIsMultiLine($val)
+	public function setIsMultiLine(bool $val):self
 	{
 		$this->multiLine=$val;
 		return $this;
@@ -37,7 +37,7 @@ class TextField extends AbstractField
 	 * Set the value of the input that was selected by the user.
 	 * @param $value string to save
 	 */
-	public function setValue($value)
+	public function setValue(mixed $value)
 	{
 		if(is_array($value))//convert the best we can to a string
 		{
@@ -59,12 +59,12 @@ class TextField extends AbstractField
 	 * Get back out a previously stored value.
 	 * @return string value
 	 */
-	public function getValue()
+	public function getValue():string
 	{
 		return $this->value;
 	}
 
-	public function getValuePrintable()
+	public function getValuePrintable():string
 	{
 		return $this->getValue();
 	}
@@ -72,7 +72,7 @@ class TextField extends AbstractField
 	 * Find out if this input is empty
 	 * @return bool true if empty
 	 */
-	public function isEmpty()
+	public function isEmpty():bool
 	{
 		return $this->value===null;
 	}
@@ -81,7 +81,7 @@ class TextField extends AbstractField
 	 * Should this text input be rendered as single or multi line?
 	 * @return bool true if it should be multi line.
 	 */
-	public function isMultiline()
+	public function isMultiline():bool
 	{
 		return $this->multiLine;
 	}
@@ -89,7 +89,7 @@ class TextField extends AbstractField
 	 * Find out if the value stored in the Input is the default value
 	 * @return boolean true if default
 	 */
-	public function isDefault()
+	public function isDefault():bool
 	{
 		if($this->defaultValue===null)
 			return $this->isEmpty();
@@ -100,7 +100,7 @@ class TextField extends AbstractField
 	 * Get the type of value stored
 	 * @return boolean true if array for getValue, setValue, and getValuePrintable
 	 */
-	public function isValueArray()
+	public function isValueArray():bool
 	{
 		return false;
 	}

@@ -11,6 +11,7 @@ namespace rizwanjiwan\common\classes\jobs;
 //use Thread;
 
 use Exception;
+use Monolog\Logger;
 use Pheanstalk\Pheanstalk;
 use rizwanjiwan\common\classes\LogManager;
 use stdClass;
@@ -19,11 +20,11 @@ class JobPoolProcessor
 {
 	const RETRY_PROPERTY='retry';
 
-	private $pool;
-	private $className;
-	private $retryLimit;
-	private $retryDelay;
-	private static $log=null;
+	private string $pool;
+	private string $className;
+	private int $retryLimit;
+	private int $retryDelay;
+	private static ?Logger $log=null;
 
 	/**
 	 * JobPoolProcessor constructor.
@@ -32,7 +33,7 @@ class JobPoolProcessor
 	 * @param int $retryLimit int the number of times to DELAYED retry a failed job
 	 * @param int $retryDelay int the number of minutes to delay a retry
 	 */
-	public function __construct($pool,$className,$retryLimit=0,$retryDelay=60)
+	public function __construct(string $pool,string $className,int $retryLimit=0,int $retryDelay=60)
 	{
 		$this->pool=$pool;
 		$this->className=$className;
@@ -107,7 +108,7 @@ class JobPoolProcessor
 	 * @param null|int $delay the delay in seconds you want to assign to this job or null for default (0)
 	 * @param null|int $ttr the max time to run in seconds you want to assign for this job or null for default (60)
 	 */
-	public static function addJob($pool,$data,$priority=null,$delay=null,$ttr=null)
+	public static function addJob(string $pool,stdClass $data,$priority=null,$delay=null,$ttr=null)
 	{
 		if(self::$log===null)
 			self::$log=LogManager::createLogger('JobPoolProcessor');

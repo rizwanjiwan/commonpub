@@ -13,18 +13,18 @@ abstract class AbstractAutoFillField extends AbstractField
 	/**
 	 * @var AbstractField the field that this is wrapping and delegating everything to
 	 */
-	protected $delegateField;
+	protected AbstractField $delegateField;
 	/**
 	 * @var string[] of field names that when changed should trigger a lookup
 	 */
-	protected $lookupFieldNames;
+	protected array $lookupFieldNames;
 
 	/**
 	 * AutoFillTextField constructor.
 	 * @param $delegateField AbstractField we're wrapping in an autofill
 	 * @param $lookupFieldNames string[] of field names that when changed should trigger a lookup by the framework
 	 */
-	public function __construct($delegateField,$lookupFieldNames)
+	public function __construct(AbstractField $delegateField,array $lookupFieldNames)
 	{
 		parent::__construct($delegateField->getUniqueName(), $delegateField->getFriendlyName());
 		$this->lookupFieldNames=$lookupFieldNames;
@@ -34,7 +34,7 @@ abstract class AbstractAutoFillField extends AbstractField
 	/**
 	 * @return string[] the unique names of the field that lookups should be triggered for
 	 */
-	public function getLookupFields()
+	public function getLookupFields():array
 	{
 		return $this->lookupFieldNames;
 	}
@@ -46,23 +46,23 @@ abstract class AbstractAutoFillField extends AbstractField
 	 * @param $set boolean true if you want to set this value in the delegated field as well as look it up
 	 * @return null|string|string[] the value
 	 */
-	public abstract function determineValue($fieldName, $fieldValue, $set=false);
+	public abstract function determineValue(string $fieldName, string $fieldValue, bool $set=false):null|string|array;
 
 	/**
 	 * Get the type of value stored
 	 * @return boolean true if array for getValue, setValue, and getValuePrintable
 	 */
-	public function isValueArray()
+	public function isValueArray():bool
 	{
 		return $this->delegateField->isValueArray();
 	}
 
 	/**
 	 * Set the value of the input that was selected by the user
-	 * @param $value mixed
+	 * @param $value string|array
 	 * @return AutoFillField
 	 */
-	public function setValue($value)
+	public function setValue(mixed $value):AutoFillField
 	{
 		return $this->delegateField->setValue($value);
 	}
@@ -71,7 +71,7 @@ abstract class AbstractAutoFillField extends AbstractField
 	 * Get back out a previously stored value.
 	 * @return string|string[] value or array of values
 	 */
-	public function getValue()
+	public function getValue():string|array|null
 	{
 		return $this->delegateField->getValue();
 	}
@@ -80,7 +80,7 @@ abstract class AbstractAutoFillField extends AbstractField
 	 * Get back out a previously stored value in a human readable/friendly output format
 	 * @return string|string[] value or array of values that are human readble/friendly/for the printable output
 	 */
-	public function getValuePrintable()
+	public function getValuePrintable():string|array
 	{
 		return $this->delegateField->getValuePrintable();
 	}
@@ -89,12 +89,12 @@ abstract class AbstractAutoFillField extends AbstractField
 	 * Find out if the value stored in the Input is the default value
 	 * @return boolean true if default
 	 */
-	public function isDefault()
+	public function isDefault():bool
 	{
 		return $this->delegateField->isDefault();
 	}
 
-	public function isMultiline()
+	public function isMultiline():bool
 	{
 		return $this->delegateField->isMultiline();
 	}

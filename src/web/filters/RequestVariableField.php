@@ -14,43 +14,43 @@ use rizwanjiwan\common\web\fields\AbstractField;
 class RequestVariableField extends AbstractField
 {
 
-    private $value;
+    private string|array $value;
 
     /**
      * RequestVariableField constructor.
      * @param $key string key into $_REQUEST
      */
-    public function __construct($key)
+    public function __construct(string $key)
     {
         parent::__construct($key, $key);
         $this->value=$_REQUEST[$key];
     }
 
-    public function isValueArray()
+    public function isValueArray():bool
     {
         return false;
     }
 
-    public function setValue($value)
+    public function setValue(mixed $value)
     {
         $this->value=$value;
     }
 
-    public function getValue()
+    public function getValue():string|array
     {
         return $this->value;
     }
 
-    public function getValuePrintable()
+    public function getValuePrintable():string|array
     {
         return $this->getValue();
     }
 
     /**
-     * @return bool|void
+     * @return bool
      * @throws Exception
      */
-    public function isDefault()
+    public function isDefault():bool
     {
         throw new Exception('Not implemented');
     }

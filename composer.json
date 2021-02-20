@@ -3,7 +3,7 @@
   "version": "2.0.4",
   "type": "package",
   "description": "Common code for my projects",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "require": {
     "monolog/monolog": "2.1.*",
     "jenssegers/blade": "^1.1",
@@ -22,6 +22,11 @@
   "autoload": {
     "psr-4": {
       "rizwanjiwan\\common\\": "src"
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "8.0"
     }
   }
 }

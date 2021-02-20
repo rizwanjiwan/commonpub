@@ -21,7 +21,7 @@ class EmailPerson implements Nameable
 	 * @param $friendlyName string|null
 	 * @throws MailException if the email address is invalid
 	 */
-	public function __construct($email, $friendlyName=null)
+	public function __construct(string $email, ?string $friendlyName=null)
 	{
 		$helper=new EmailHelper($email);
 		if($helper->isValid()===false)
@@ -44,13 +44,13 @@ class EmailPerson implements Nameable
 	 * @param null|string $friendlyName
 	 * @return EmailPerson|null if the email address is invalid
 	 */
-	public static function create($email,$friendlyName=null)
+	public static function create(string $email,?string $friendlyName=null):?EmailPerson
 	{
 		try
 		{
 			return new self($email,$friendlyName);
 
-		}catch(MailException $e)
+		}catch(MailException)
 		{
 			return null;
 		}
@@ -59,7 +59,7 @@ class EmailPerson implements Nameable
 	 * Get a representation of this as a standard class
 	 * @return stdClass
 	 */
-	public function stdClassEncode()
+	public function stdClassEncode():stdClass
 	{
 		$obj=new stdClass();
 		$obj->uniqueName=$this->getUniqueName();
@@ -70,10 +70,10 @@ class EmailPerson implements Nameable
 	/**
 	 * Convert a representation from a stdClass back to this
 	 * @param $obj stdClass
-	 * @return EmailPerson
+	 * @return EmailPerson|null null if object is null
 	 * @throws MailException
 	 */
-	public static function fromStdClass($obj)
+	public static function fromStdClass(stdClass $obj):?EmailPerson
 	{
 		if($obj===null)
 			return null;

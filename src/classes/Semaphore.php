@@ -13,7 +13,7 @@ class Semaphore
     /**
      * @var string the path to the lock file
      */
-    private $lockFile;
+    private string $lockFile;
 
     /**
      * @var resource lock on file

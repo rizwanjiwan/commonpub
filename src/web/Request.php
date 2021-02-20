@@ -19,20 +19,20 @@ class Request
 	/**
 	 * @var string[] associate array of parameters from the route
 	 */
-	public $routeParams=array();
+	public array $routeParams=array();
 	/**
 	 * @var Logger to use
 	 */
-	public $log;
+	public Logger $log;
 	/**
 	 * @var NameableContainer of Filter
 	 */
-	private $filters;
+	private NameableContainer $filters;
 
 	/**
 	 * @var string Stores additional context of what was going on when an error happened.
 	 */
-	private $errorContext="Pre-response";
+	private string $errorContext="Pre-response";
 
 	public function __construct()
 	{
@@ -44,7 +44,7 @@ class Request
 	 * @param $view string view name
 	 * @param $data array()
 	 */
-	public function respondView($view,$data)
+	public function respondView(string $view,array $data=array())
 	{
 		$this->errorContext='View: '.$view;
 		try
@@ -65,7 +65,7 @@ class Request
 	 * @param $data array()
 	 * @throws Exception
 	 */
-	private function respondViewThrowExceptions($view,$data)
+	private function respondViewThrowExceptions(string $view, array $data=array())
 	{
 		//int blade
 		$this->log->debug('Rendering '.$view);
@@ -84,7 +84,7 @@ class Request
 	 * When you want to dump output as json
 	 * @param $obj object|array which can be passed through json_encode
 	 */
-	public function respondJson($obj)
+	public function respondJson(mixed $obj)
 	{
 		echo json_encode($obj);
 	}
@@ -95,7 +95,7 @@ class Request
 	 * @param $url string url to redirect to
 	 * @param $code int http code for the redirect (302 - "temporary" or 301 - "permanent" are likely candidates)
 	 */
-	public function respondRedirect($url,$code=302)
+	public function respondRedirect(string $url, int $code=302)
 	{
 		$this->errorContext='Redirect ('.$code.'): '.$url;
 
@@ -119,15 +119,15 @@ class Request
 	 * @param $message string message
 	 * @param $code int the http error code, if any.
 	 */
-	public function respondError($message,$code=500)
+	public function respondError(string $message,int $code=500)
 	{
 		http_response_code($code);
 		if($code!=404)
 			$message.=' - '.$this->errorContext;
 		if($code===404)
-			$this->log->debug($message." - on: ".$_SERVER['REDIRECT_URL']);
+			$this->log->debug($message);
 		else
-			$this->log->error($message." - on: ".$_SERVER['REDIRECT_URL']);
+			$this->log->error($message);
 		try
 		{
 			new Alert(Alert::TYPE_DANGER,$message);

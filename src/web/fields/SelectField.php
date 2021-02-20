@@ -10,10 +10,10 @@ namespace rizwanjiwan\common\web\fields;
 class SelectField extends AbstractField
 {
 
-	private $value = null;
+	private ?string $value = null;
 	/**@var $options SelectOption[] where string name is key*/
-	private $options = array();
-	private $defaultValue=null;
+	private array $options = array();
+	private ?string $defaultValue=null;
 
 
 
@@ -22,7 +22,7 @@ class SelectField extends AbstractField
 	 * @param $selectOption SelectOption
 	 * @return $this for easy chaining
 	 */
-	public function addOption($selectOption)
+	public function addOption(SelectOption $selectOption):self
 	{
 		//save the option
 		$this->options[$selectOption->name]=$selectOption;
@@ -35,7 +35,7 @@ class SelectField extends AbstractField
 		return $this;
 	}
 
-	public function getValuePrintable()
+	public function getValuePrintable():string
 	{
 		$val=$this->getValue();
 		if(array_key_exists($val,$this->options))
@@ -46,7 +46,7 @@ class SelectField extends AbstractField
 	 * Get the options in this Select Input
 	 * @return SelectOption[]
 	 */
-	public function getOptions()
+	public function getOptions():array
 	{
 		return $this->options;
 	}
@@ -55,7 +55,7 @@ class SelectField extends AbstractField
 	 * Set the value of the input that was selected by the user
 	 * @param $value string|string[]
 	 */
-	public function setValue($value)
+	public function setValue(string|array $value)
 	{
 		if(is_array($value))
 			$value=implode(',',$value);
@@ -69,16 +69,15 @@ class SelectField extends AbstractField
 	 * Find out if this input is empty
 	 * @return bool true if empty
 	 */
-	public function isEmpty()
+	public function isEmpty():bool
 	{
 		return $this->value===null;
 	}
 
 	/**
 	 * Get back out a previously stored value.
-	 * @return string value
 	 */
-	public function getValue()
+	public function getValue():?string
 	{
 		return $this->value;
 	}
@@ -88,7 +87,7 @@ class SelectField extends AbstractField
 	 * @param $name string name of the option
 	 * @return bool true if selected
 	 */
-	public function isSelected($name)
+	public function isSelected(string $name):bool
 	{
 		return strcmp($name,$this->getValue())===0;
 	}
@@ -97,7 +96,7 @@ class SelectField extends AbstractField
 	 * Find out if the value stored in the Input is the default value
 	 * @return boolean true if default
 	 */
-	public function isDefault()
+	public function isDefault():bool
 	{
 		return strcmp($this->getValue(),$this->defaultValue)===0;
 	}
@@ -106,7 +105,7 @@ class SelectField extends AbstractField
 	 * Get the type of value stored
 	 * @return boolean true if array for getValue, setValue, and getValuePrintable
 	 */
-	public function isValueArray()
+	public function isValueArray():bool
 	{
 		return false;
 	}

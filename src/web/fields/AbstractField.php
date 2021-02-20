@@ -16,9 +16,11 @@ abstract class AbstractField implements Nameable
 {
 	use NameableTrait;
 
-	private $validators=array();
+	private array $validators=array();
 
-	public function __construct($uniqueName,$friendlyName)
+	private array $visibilityChecks=array();
+
+	public function __construct(string $uniqueName,?string $friendlyName)
 	{
 		try
 		{
@@ -34,7 +36,7 @@ abstract class AbstractField implements Nameable
 	 * @param $validator Validator to add to use later
 	 * @return $this for easy chaining
 	 */
-	public function addValidator($validator)
+	public function addValidator(Validator $validator)
 	{
 		array_push($this->validators,$validator);
 		return $this;
@@ -45,7 +47,7 @@ abstract class AbstractField implements Nameable
      * @param $otherFields NameableContainer all the fields in case validation depends on another value
      * @throws InvalidValueException
      */
-	public function validate($otherFields)
+	public function validate(NameableContainer $otherFields)
 	{
 		foreach($this->validators as $validator)
 		{
@@ -56,10 +58,10 @@ abstract class AbstractField implements Nameable
 
 	/**
 	 * Specify the visibility checks to execute on this AbstractField. If this method is never called, this field will always be visible. All visibility checks must pass for this field to be visible.
-	 * @param $visibilityCheck VisibilityCheck a check to run.
+	 * @param $visibilityCheck a check to run.
 	 * @return self $this
 	 */
-	public function addVisibilityCheck($visibilityCheck)
+	public function addVisibilityCheck($visibilityCheck):self
 	{
 		array_push($this->visibilityChecks,$visibilityCheck);
 		return $this;
@@ -71,7 +73,7 @@ abstract class AbstractField implements Nameable
 	 * @param $fields NameableContainer|null of fields filled in that sit along side this field. Null will skip checks.
 	 * @return bool|null if this field should show. Null to not do anything with this field.
 	 */
-	public function isVisible($fields)
+	public function isVisible(?NameableContainer $fields):?bool
 	{
 		if((count($this->visibilityChecks)===0)||($fields===null))
 			return true;
@@ -83,7 +85,7 @@ abstract class AbstractField implements Nameable
 		return true;
 	}
 
-	public function isMultiline()
+	public function isMultiline():bool
 	{
 		return false;
 	}
@@ -91,30 +93,30 @@ abstract class AbstractField implements Nameable
 	 * Get the type of value stored
 	 * @return boolean true if array for getValue, setValue, and getValuePrintable
 	 */
-	public abstract function isValueArray();
+	public abstract function isValueArray():bool;
 
 	/**
 	 * Set the value of the input that was selected by the user
 	 * @param $value mixed
 	 */
-	public abstract function setValue($value);
+	public abstract function setValue(mixed $value);
 
 	/**
 	 * Get back out a previously stored value.
 	 * @return string|string[] value or array of values
 	 */
-	public abstract function getValue();
+	public abstract function getValue():string|array|null;
 
 	/**
 	 * Get back out a previously stored value in a human readable/friendly output format
 	 * @return string|string[] value or array of values that are human readble/friendly/for the printable output
 	 */
-	public abstract function getValuePrintable();
+	public abstract function getValuePrintable():string|array|null;
 
 	/**
 	 * Find out if the value stored in the Input is the default value
 	 * @return boolean true if default
 	 */
-	public abstract function isDefault();
+	public abstract function isDefault():bool;
 
 }

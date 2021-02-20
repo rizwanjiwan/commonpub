@@ -10,11 +10,11 @@ namespace rizwanjiwan\common\web\fields;
 class SelectFields extends AbstractField
 {
 	/** @var string[] of selected values  */
-	private $values=array();//selected values
+	private array $values=array();//selected values
 	/** @var string[] of default values  */
-	private $defaults=array();
+	private array $defaults=array();
 	/**@var $options SelectOption[] where string name is key*/
-	private $options = array();
+	private array $options = array();
 
 
 
@@ -23,7 +23,7 @@ class SelectFields extends AbstractField
 	 * @param $selectOption SelectOption
 	 * @return $this to allow easy chaining of calls
 	 */
-	public function addOption($selectOption)
+	public function addOption(SelectOption $selectOption):self
 	{
 		//save the option
 		$this->options[$selectOption->name]=$selectOption;
@@ -37,7 +37,7 @@ class SelectFields extends AbstractField
 		return $this;
 	}
 
-	public function getValuePrintable()
+	public function getValuePrintable():array
 	{
 		$retArray=array();
 		foreach($this->values as $value)
@@ -48,7 +48,7 @@ class SelectFields extends AbstractField
 	 * Get the options in this Select Input
 	 * @return SelectOption[]
 	 */
-	public function getOptions()
+	public function getOptions():array
 	{
 		return $this->options;
 	}
@@ -57,7 +57,7 @@ class SelectFields extends AbstractField
 	 * Set the value of the input that was selected by the user
 	 * @param $value string|string[]
 	 */
-	public function setValue($value)
+	public function setValue(mixed $value)
 	{
 		if($value===null)
 			$value=array();//empty array
@@ -70,7 +70,7 @@ class SelectFields extends AbstractField
 	 * Find out if this input is empty
 	 * @return bool true if empty
 	 */
-	public function isEmpty()
+	public function isEmpty():bool
 	{
 		return count($this->values)===0;
 	}
@@ -79,7 +79,7 @@ class SelectFields extends AbstractField
 	 * Get back out a previously stored value.
 	 * @return string[] value
 	 */
-	public function getValue()
+	public function getValue():array
 	{
 		return $this->values;
 	}
@@ -88,7 +88,7 @@ class SelectFields extends AbstractField
 	 * Find out if the value stored in the Input is the default value
 	 * @return boolean true if default
 	 */
-	public function isDefault()
+	public function isDefault():bool
 	{
 		if(count($this->values)!==count($this->defaults))
 			return false;
@@ -105,7 +105,7 @@ class SelectFields extends AbstractField
 	 * Get the type of value stored
 	 * @return boolean true if array for getValue, setValue, and getValuePrintable
 	 */
-	public function isValueArray()
+	public function isValueArray():bool
 	{
 		return true;
 	}

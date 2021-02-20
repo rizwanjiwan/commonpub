@@ -10,7 +10,7 @@ use League\OAuth2\Client\Token\AccessToken;
 class GoogleOpenIdProvider extends Google
 {
 
-    public function getResourceOwnerDetailsUrl(AccessToken $token)
+    public function getResourceOwnerDetailsUrl(AccessToken $token):string
     {
         //override parent to use the correct endpint now that google plus has shutdown
         //https://accounts.google.com/.well-known/openid-configuration is different but we'll use what parent uses for now

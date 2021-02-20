@@ -13,10 +13,10 @@ use rizwanjiwan\common\classes\NameableContainer;
 
 class NumericRangeValidator  implements Validator
 {
-	private $max;
-	private $min;
+	private float|int $max;
+	private float|int $min;
 
-	public function __construct($min,$max)
+	public function __construct(float|int $min,float|int $max)
 	{
 		$this->max=$max;
 		$this->min=$min;
@@ -28,7 +28,7 @@ class NumericRangeValidator  implements Validator
 	 * @param $fields NameableContainer of AbstractField for the other fields values that might be needed in validation
 	 * @throws InvalidValueException if not valid
 	 */
-	public function validate($field,$fields)
+	public function validate(AbstractField $field, NameableContainer $fields)
 	{
 		$value=$field->getValue();
 
