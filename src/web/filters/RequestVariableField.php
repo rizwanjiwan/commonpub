@@ -31,9 +31,10 @@ class RequestVariableField extends AbstractField
         return false;
     }
 
-    public function setValue(mixed $value)
+    public function setValue(mixed $value):self
     {
         $this->value=$value;
+        return $this;
     }
 
     public function getValue():string|array
