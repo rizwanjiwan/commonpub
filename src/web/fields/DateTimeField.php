@@ -90,9 +90,9 @@ class DateTimeField extends AbstractField
 	}
 
 	/**
-	 * @return DateTime the date time contained in $this
+	 * @return ?DateTime the date time contained in $this
 	 */
-	public function getDateTime():DateTime
+	public function getDateTime():?DateTime
 	{
 		return $this->value;
 	}
