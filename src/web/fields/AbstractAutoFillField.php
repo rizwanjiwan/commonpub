@@ -60,11 +60,12 @@ abstract class AbstractAutoFillField extends AbstractField
 	/**
 	 * Set the value of the input that was selected by the user
 	 * @param $value string|array
-	 * @return AutoFillField
+	 * @return self
 	 */
-	public function setValue(mixed $value):AutoFillField
+	public function setValue(mixed $value):self
 	{
-		return $this->delegateField->setValue($value);
+		$this->delegateField->setValue($value);
+		return $this;
 	}
 
 	/**

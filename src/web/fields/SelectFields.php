@@ -57,13 +57,14 @@ class SelectFields extends AbstractField
 	 * Set the value of the input that was selected by the user
 	 * @param $value string|string[]
 	 */
-	public function setValue(mixed $value)
+	public function setValue(mixed $value):self
 	{
 		if($value===null)
 			$value=array();//empty array
 		else if(is_array($value)===false)//it's a json string we need to convert to an an array
 			$value=json_decode($value);
 		$this->values = $value;
+		return $this;
 	}
 
 	/**

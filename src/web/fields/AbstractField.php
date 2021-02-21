@@ -96,11 +96,12 @@ abstract class AbstractField implements Nameable
 	 */
 	public abstract function isValueArray():bool;
 
-	/**
-	 * Set the value of the input that was selected by the user
-	 * @param $value mixed
-	 */
-	public abstract function setValue(mixed $value);
+    /**
+     * Set the value of the input that was selected by the user
+     * @param $value mixed
+     * @return AbstractField
+     */
+	public abstract function setValue(mixed $value):self;
 
 	/**
 	 * Get back out a previously stored value.

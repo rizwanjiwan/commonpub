@@ -37,7 +37,7 @@ class TextField extends AbstractField
 	 * Set the value of the input that was selected by the user.
 	 * @param $value string to save
 	 */
-	public function setValue(mixed $value)
+	public function setValue(mixed $value):self
 	{
 		if(is_array($value))//convert the best we can to a string
 		{
@@ -53,6 +53,7 @@ class TextField extends AbstractField
 			$this->value=null;
 		else
 			$this->value=$value;
+		return $this;
 	}
 
 	/**
