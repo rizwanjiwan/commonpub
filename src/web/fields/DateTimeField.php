@@ -19,15 +19,18 @@ class DateTimeField extends AbstractField
 	protected DateTime|null $defaultValue=null;
 	private bool $isNull=false;
 	private bool $isInvalidDateTime=false;
+    private bool $isDateOnly=false;
+
 
     /**
      * DateTimeField constructor.
      * @param string $uniqueName
      * @param string $friendlyName
      * @param string|null $defaultValue
+     * @param bool $isDateOnly is this field only holding a date value?
      * @throws Exception
      */
-	public function __construct(string $uniqueName,string $friendlyName,?string $defaultValue=null)
+	public function __construct(string $uniqueName,string $friendlyName,?string $defaultValue=null,bool $isDateOnly=false)
 	{
 		parent::__construct($uniqueName,$friendlyName);
 		$this->isNull=$defaultValue===null;
@@ -37,6 +40,7 @@ class DateTimeField extends AbstractField
 			$defaultValue=new DateTime($defaultValue);
 		$this->defaultValue=$defaultValue;
 		$this->value=$this->defaultValue;
+        $this->isDateOnly=$isDateOnly;
 	}
 
 	/**
@@ -84,9 +88,11 @@ class DateTimeField extends AbstractField
 	 */
 	public function getValue():?string
 	{
-		if($this->isNull)
-			return null;
-		return $this->value->format('Y-m-d H:i');
+        if($this->isNull)
+            return null;
+        if($this->isDateOnly())
+            return $this->value->format('Y-m-d');
+        return $this->value->format('Y-m-d H:i');
 	}
 
 	/**
@@ -129,4 +135,11 @@ class DateTimeField extends AbstractField
 	{
 		return $this->isNull;
 	}
+    /**
+     * @return bool true if this datetime is only about the date and you should ignore the rest
+     */
+    public function isDateOnly()
+    {
+        return $this->isDateOnly;
+    }
 }
