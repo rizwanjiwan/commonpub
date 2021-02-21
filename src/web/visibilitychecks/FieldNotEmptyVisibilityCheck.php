@@ -9,7 +9,7 @@ use rizwanjiwan\common\web\fields\AbstractField;
 
 class FieldNotEmptyVisibilityCheck implements VisibilityCheck
 {
-    private AbstractField $fieldToCheck;
+    private string $fieldToCheck;
 
     public function __construct(string $fieldToCheck)
     {

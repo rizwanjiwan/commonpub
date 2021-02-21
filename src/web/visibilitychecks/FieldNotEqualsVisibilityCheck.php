@@ -9,7 +9,7 @@ use rizwanjiwan\common\web\fields\AbstractField;
 
 class FieldNotEqualsVisibilityCheck implements VisibilityCheck
 {
-    private AbstractField $fieldToCheck;
+    private string $fieldToCheck;
 
     private array $valuesToCheck=array();
 
