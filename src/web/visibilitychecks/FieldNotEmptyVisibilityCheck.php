@@ -21,7 +21,7 @@ class FieldNotEmptyVisibilityCheck implements VisibilityCheck
      * @param $fields NameableContainer of AbstractField for the other fields values that might be needed in validation
      * @return boolean true if the field is visible or not given the passed information
      */
-    public function isVisible($field, $fields)
+    public function isVisible(AbstractField $field, NameableContainer $fields):bool
     {
         $fieldToCheck=$fields->get($this->fieldToCheck);
         if($fieldToCheck===null)

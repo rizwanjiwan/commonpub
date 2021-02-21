@@ -25,12 +25,12 @@ class SelectField extends AbstractField
 	public function addOption(SelectOption $selectOption):self
 	{
 		//save the option
-		$this->options[$selectOption->name]=$selectOption;
+		$this->options[$selectOption->getUniqueName()]=$selectOption;
 
 		if($selectOption->selectedByDefault)
 		{
-			$this->value=$selectOption->name;//set the preselected value
-			$this->defaultValue=$selectOption->name;
+			$this->value=$selectOption->getUniqueName();//set the preselected value
+			$this->defaultValue=$selectOption->getUniqueName();
 		}
 		return $this;
 	}
@@ -39,7 +39,7 @@ class SelectField extends AbstractField
 	{
 		$val=$this->getValue();
 		if(array_key_exists($val,$this->options))
-			return $this->options[$this->getValue()]->friendlyName;
+			return $this->options[$this->getValue()]->getFriendlyName();
 		return $val;
 	}
 	/**
@@ -55,7 +55,7 @@ class SelectField extends AbstractField
 	 * Set the value of the input that was selected by the user
 	 * @param $value string|string[]
 	 */
-	public function setValue(string|array $value)
+	public function setValue(mixed $value)
 	{
 		if(is_array($value))
 			$value=implode(',',$value);

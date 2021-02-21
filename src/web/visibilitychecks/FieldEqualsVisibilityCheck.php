@@ -22,12 +22,12 @@ class FieldEqualsVisibilityCheck extends FieldNotEqualsVisibilityCheck
 
     /**
      * Add a value to check the field against
-     * @param $valueEqual string the value
+     * @param $valueNotEqual string the value to be equal (yes, the name is the opposite, php 8)
      * @return self $this
      */
-    public function addValue(string $valueEqual):self
+    public function addValue(string $valueNotEqual):self
     {
-        parent::addValue($valueEqual);
+        parent::addValue($valueNotEqual);
         return $this;
     }
 }

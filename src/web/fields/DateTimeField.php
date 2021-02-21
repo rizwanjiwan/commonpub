@@ -106,7 +106,7 @@ class DateTimeField extends AbstractField
 	 * Find out if the value stored in the Input is the default value
 	 * @return boolean true if default
 	 */
-	public function isDefault()
+	public function isDefault():bool
 	{
 		if($this->isNull)
 			return $this->defaultValue===$this->value;
@@ -117,7 +117,7 @@ class DateTimeField extends AbstractField
 	 * Get the type of value stored
 	 * @return boolean true if array for getValue, setValue, and getValuePrintable
 	 */
-	public function isValueArray()
+	public function isValueArray():bool
 	{
 		return false;
 	}

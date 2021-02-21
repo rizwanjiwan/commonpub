@@ -26,13 +26,13 @@ class SelectFields extends AbstractField
 	public function addOption(SelectOption $selectOption):self
 	{
 		//save the option
-		$this->options[$selectOption->name]=$selectOption;
+		$this->options[$selectOption->getUniqueName()]=$selectOption;
 
 		//preselected and save as a default for later comparison
 		if($selectOption->selectedByDefault)
 		{
-			array_push($this->values, $selectOption->name);
-			array_push($this->defaults, $selectOption->name);
+			array_push($this->values, $selectOption->getUniqueName());
+			array_push($this->defaults, $selectOption->getUniqueName());
 		}
 		return $this;
 	}
@@ -41,7 +41,7 @@ class SelectFields extends AbstractField
 	{
 		$retArray=array();
 		foreach($this->values as $value)
-			array_push($retArray,$this->options[$value]->friendlyName);
+			array_push($retArray,$this->options[$value]->getFriendlyName());
 		return $retArray;
 	}
 	/**
