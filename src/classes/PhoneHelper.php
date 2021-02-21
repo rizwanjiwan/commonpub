@@ -113,9 +113,9 @@ class PhoneHelper implements FormatHelper
 
 	/**
 	 * @param null|int $format_type null will default to human format. int will be one of the FORMAT_* constants in this class
-	 * @return string the value formatted appropriately. Will do best effort if isValid() doesn't return true
+	 * @return ?string the value formatted appropriately. Will do best effort if isValid() doesn't return true
 	 */
-	public function getFormatted(?int $format_type=null):string
+	public function getFormatted(?int $format_type=null):?string
 	{
 		if($this->isValidCalled==false)
 			$this->isValid();

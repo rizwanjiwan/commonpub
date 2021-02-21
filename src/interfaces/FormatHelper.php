@@ -27,7 +27,7 @@ interface FormatHelper
 
 	/**
 	 * @param mixed $format_type null for default format, otherwise, implementations may provide ways of indicating different formats to request
-	 * @return string the value formatted appropriately. Will do best effort if isValid() doesn't return true
+	 * @return ?string the value formatted appropriately. Will do best effort if isValid() doesn't return true
 	 */
-	public function getFormatted(?int $format_type=null):string;
+	public function getFormatted(?int $format_type=null):?string;
 }
