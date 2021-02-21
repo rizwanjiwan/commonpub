@@ -58,14 +58,14 @@ class TextField extends AbstractField
 
 	/**
 	 * Get back out a previously stored value.
-	 * @return string value
+	 * @return ?string value
 	 */
-	public function getValue():string
+	public function getValue():?string
 	{
 		return $this->value;
 	}
 
-	public function getValuePrintable():string
+	public function getValuePrintable():?string
 	{
 		return $this->getValue();
 	}

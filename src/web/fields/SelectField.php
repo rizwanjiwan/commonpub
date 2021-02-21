@@ -35,7 +35,7 @@ class SelectField extends AbstractField
 		return $this;
 	}
 
-	public function getValuePrintable():string
+	public function getValuePrintable():?string
 	{
 		$val=$this->getValue();
 		if(array_key_exists($val,$this->options))

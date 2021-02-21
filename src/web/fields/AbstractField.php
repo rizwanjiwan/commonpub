@@ -105,7 +105,7 @@ abstract class AbstractField implements Nameable
 
 	/**
 	 * Get back out a previously stored value.
-	 * @return string|string[] value or array of values
+	 * @return string|string[]|null value or array of values
 	 */
 	public abstract function getValue():string|array|null;
 
