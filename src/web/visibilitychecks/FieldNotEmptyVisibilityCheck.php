@@ -11,7 +11,7 @@ class FieldNotEmptyVisibilityCheck implements VisibilityCheck
 {
     private AbstractField $fieldToCheck;
 
-    public function __construct(AbstractField $fieldToCheck)
+    public function __construct(string $fieldToCheck)
     {
         $this->fieldToCheck=$fieldToCheck;
     }

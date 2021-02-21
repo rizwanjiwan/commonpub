@@ -13,7 +13,7 @@ class FieldNotEqualsVisibilityCheck implements VisibilityCheck
 
     private array $valuesToCheck=array();
 
-    public function __construct(AbstractField $fieldToCheck)
+    public function __construct(string $fieldToCheck)
     {
         $this->fieldToCheck=$fieldToCheck;
     }
