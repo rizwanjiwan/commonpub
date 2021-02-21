@@ -11,6 +11,7 @@ use rizwanjiwan\common\classes\NameableContainer;
 use rizwanjiwan\common\web\validators\Validator;
 use rizwanjiwan\common\interfaces\Nameable;
 use rizwanjiwan\common\traits\NameableTrait;
+use rizwanjiwan\common\web\visibilitychecks\VisibilityCheck;
 
 abstract class AbstractField implements Nameable
 {
@@ -58,10 +59,10 @@ abstract class AbstractField implements Nameable
 
 	/**
 	 * Specify the visibility checks to execute on this AbstractField. If this method is never called, this field will always be visible. All visibility checks must pass for this field to be visible.
-	 * @param $visibilityCheck a check to run.
+	 * @param $visibilityCheck VisibilityCheck a check to run.
 	 * @return self $this
 	 */
-	public function addVisibilityCheck($visibilityCheck):self
+	public function addVisibilityCheck(VisibilityCheck $visibilityCheck):self
 	{
 		array_push($this->visibilityChecks,$visibilityCheck);
 		return $this;
