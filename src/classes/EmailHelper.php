@@ -63,9 +63,9 @@ class EmailHelper implements FormatHelper
 
 	/**
 	 * Set a value to use in this formatter
-	 * @param $value string the value to use
+	 * @param $value ?string the value to use
 	 */
-	public function setValue(string $value)
+	public function setValue(?string $value)
 	{
 		$this->valueUnformatted=$value;
 	}

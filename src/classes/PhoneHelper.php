@@ -50,11 +50,11 @@ class PhoneHelper implements FormatHelper
 
 	/**
 	 * Set a value to use in this formatter
-	 * @param $number string
+	 * @param $value string
 	 */
-	public function setValue(string $number)
+	public function setValue(?string $value)
 	{
-		$this->number=$number;
+		$this->number=$value;
 		$this->isValidCalled=false;
 	}
 

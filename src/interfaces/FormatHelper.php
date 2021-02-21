@@ -11,9 +11,9 @@ interface FormatHelper
 
 	/**
 	 * Set a value to use in this formatter
-	 * @param $value string
+	 * @param $value ?string
 	 */
-	public function setValue(string $value);
+	public function setValue(?string $value);
 	/**
 	 * Check if the set value is valid for this format
 	 * @return boolean true if the value is valid
