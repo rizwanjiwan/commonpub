@@ -69,11 +69,11 @@ class EmailPerson implements Nameable
 
 	/**
 	 * Convert a representation from a stdClass back to this
-	 * @param $obj stdClass
+	 * @param $obj ?stdClass
 	 * @return EmailPerson|null null if object is null
 	 * @throws MailException
 	 */
-	public static function fromStdClass(stdClass $obj):?EmailPerson
+	public static function fromStdClass(?stdClass $obj):?EmailPerson
 	{
 		if($obj===null)
 			return null;
