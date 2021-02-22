@@ -135,11 +135,11 @@ trait AuthenticationTrait
 
     /**
      * Get the domain part of an email address
-     * @param $email string email
+     * @param $email ?string email
      * @return string the domain part of the email
      * @throws AuthorizationException on invalid email
      */
-    private function emailToDomain(string $email):string
+    private function emailToDomain(?string $email):string
     {
         if(($email===null)||(strlen($email===0))||(strpos($email,'@')===false))
             throw new AuthorizationException('Invalid email "'.$email.'" ');
