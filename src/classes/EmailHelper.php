@@ -6,6 +6,8 @@
 namespace rizwanjiwan\common\classes;
 
 
+use DateTime;
+use DateTimeZone;
 use PHPMailer\PHPMailer\Exception;
 use rizwanjiwan\common\classes\exceptions\MailException;
 use rizwanjiwan\common\classes\jobs\JobPoolProcessor;
@@ -124,6 +126,35 @@ class EmailHelper implements FormatHelper
 		return $parts[0];	//user
 	}
 
+    /**
+     * @param $from EmailPerson from address
+     * @param $replyTo EmailPerson|null where replies should go. null if same as from
+     * @param $to NameableContainer of EmailPerson - the addresses to send to
+     * @param string $subject
+     * @return PHPMailer
+     * @throws Exception
+     */
+    private static function getMailer(EmailPerson $from,?EmailPerson $replyTo,NameableContainer $to,string $subject):PHPMailer
+    {
+        $mail = new PHPMailer();
+        $mail->isSMTP();
+        //$mail->SMTPDebug = 2;
+        $mail->Host = Config::get('SMTP_HOST');
+        $mail->Port = Config::get('SMTP_PORT');
+        $mail->SMTPSecure = Config::get('SMTP_SECURE');
+        $mail->SMTPAuth = true;
+        $mail->Username = Config::get('SMTP_LOGIN');
+        $mail->Password = Config::get('SMTP_PASSWORD');
+        $mail->setFrom($from->getUniqueName(), $from->getFriendlyName());
+
+        if($replyTo!==null)
+            $mail->addReplyTo($replyTo->getUniqueName(),$replyTo->getFriendlyName());
+        foreach($to as $add)
+            $mail->addAddress($add->getUniqueName(),$add->getFriendlyName());
+        $mail->Subject = $subject;
+        return $mail;
+    }
+
 	/**
 	 * Send an email right now
 	 * @param $from EmailPerson from address
@@ -138,25 +169,10 @@ class EmailHelper implements FormatHelper
 	{
 		if(strcmp(Config::get('ENV'),'prod')===0)
 		{
-			$mail = new PHPMailer();
-			$mail->isSMTP();
-			//$mail->SMTPDebug = 2;
-			$mail->Host = Config::get('SMTP_HOST');
-			$mail->Port = Config::get('SMTP_PORT');
-			$mail->SMTPSecure = Config::get('SMTP_SECURE');
-			$mail->SMTPAuth = true;
-			$mail->Username = Config::get('SMTP_LOGIN');
-			$mail->Password = Config::get('SMTP_PASSWORD');
 			try
 			{
-				$mail->setFrom($from->getUniqueName(), $from->getFriendlyName());
-
-				if($replyTo!==null)
-					$mail->addReplyTo($replyTo->getUniqueName(),$replyTo->getFriendlyName());
-				foreach($to as $add) /**@var $add EmailPerson*/
-					$mail->addAddress($add->getUniqueName(),$add->getFriendlyName());
-				$mail->Subject = $subject;
-				$mail->msgHTML($body);
+                $mail=self::getMailer($from,$replyTo,$to,$subject);
+                $mail->msgHTML($body);
 				$mail->AltBody = 'This is an HTML email, please use a compatible email reader.';
 				foreach($attachments as $attachment)
 					$mail->addAttachment($attachment->path(),$attachment->fileName());
@@ -208,6 +224,58 @@ class EmailHelper implements FormatHelper
 		return false;
 	}
 
+    public static function sendCalendarInvite(EmailPerson $from,
+                                              ?EmailPerson $replyTo,
+                                              NameableContainer $to,
+                                              string $subject,
+                                              DateTime $start,
+                                              DateTime $end,
+                                              string $body,
+                                              string $location)
+    {
+        if(strcmp(Config::get('ENV'),'prod')===0)
+        {
+
+            try
+            {
+                $mail=self::getMailer($from,$replyTo,NameableContainer::create()->add($to),$subject);
+                $mail->isHTML(false);
+                $mail->ContentType = 'text/calendar';
+
+                $mail->addCustomHeader('Content-type',"text/calendar; method=REQUEST; charset=UTF-8");
+                $mail->addCustomHeader('Content-Transfer-Encoding',"7bit");
+                $mail->addCustomHeader('X-Mailer',"Microsoft Office Outlook 12.0");
+                $mail->addCustomHeader("Content-class: urn:content-classes:calendarmessage");
+                $startString=$start->setTimezone(new DateTimeZone("UTC"))->format('Ymd\This').'Z';
+                $endString=$end->setTimezone(new DateTimeZone("UTC"))->format('Ymd\This').'Z';
+
+                $ical = 'BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+DTEND:' . $endString . '
+UID:' . md5($startString.$body.$endString) . '
+DTSTAMP:' . time() . '
+LOCATION:' . addslashes($location) . '
+DESCRIPTION:' . addslashes($body) . '
+SUMMARY:' . addslashes($subject) . '
+DTSTART:' . $startString . '
+END:VEVENT
+END:VCALENDAR';
+                $mail->Body=$ical;
+
+
+                if (!$mail->send())
+                    throw new MailException( "Mailer Error: " . $mail->ErrorInfo);
+            }
+            catch (Exception $e)
+            {
+                throw new MailException( "Mailer Error: " . $e->getMessage(),0,$e);
+            }
+        }
+        //else do nothing
+    }
     /**
      * Send an email though the job pool
      * @param $pool string the job pool to use
