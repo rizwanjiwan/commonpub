@@ -24,7 +24,7 @@ class SlackHelper
 
     }
 
-    private static function sendMessageReal(string $message, string $webhookUrl)
+    protected static function sendMessageReal(string $message, string $webhookUrl)
     {
         $slackMessage=new SlackMessage(new Slack($webhookUrl));
         $slackMessage->setText($message);
