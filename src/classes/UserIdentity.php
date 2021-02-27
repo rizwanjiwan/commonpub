@@ -72,7 +72,7 @@ class UserIdentity
                 $this->picture=$_SESSION['picture'];
                 $this->method=$_SESSION['method'];
                 $this->isAuthed=true;
-                $this->log->info('User logged in by session:'.$this->email);
+                $this->log->debug('User logged in by session:'.$this->email);
             }
         }
         elseif((strcmp(Config::get('ENV'),'dev')===0)&&(Config::getBool('LOGIN_BYPASS')===true))
@@ -104,7 +104,7 @@ class UserIdentity
      */
     public function setIdentity(string $name,string $domain, string $email,?string $picture,int $method)
     {
-        $this->log->info('Logged in by setIdentity: '.$email);
+        $this->log->debug('Logged in by setIdentity: '.$email);
         //make sure they're from an allowed domain
         $domain=strtolower($domain);
         $email=strtolower($email);
