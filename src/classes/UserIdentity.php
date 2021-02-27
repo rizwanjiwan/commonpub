@@ -104,7 +104,7 @@ class UserIdentity
      */
     public function setIdentity(string $name,string $domain, string $email,?string $picture,int $method)
     {
-        $this->log->debug('Logged in by setIdentity: '.$email);
+        $this->log->info('Logged in by setIdentity: '.$email);
         //make sure they're from an allowed domain
         $domain=strtolower($domain);
         $email=strtolower($email);
