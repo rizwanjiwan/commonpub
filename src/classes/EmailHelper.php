@@ -238,7 +238,7 @@ class EmailHelper implements FormatHelper
 
             try
             {
-                $mail=self::getMailer($from,$replyTo,NameableContainer::create()->add($to),$subject);
+                $mail=self::getMailer($from,$replyTo,$to,$subject);
                 $mail->isHTML(false);
                 $mail->ContentType = 'text/calendar';
 
