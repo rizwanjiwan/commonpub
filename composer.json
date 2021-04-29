@@ -1,12 +1,12 @@
 {
   "name": "rizwanjiwan/commonpub",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "type": "package",
   "description": "Common code for my projects",
   "license": "GPL-3.0-or-later",
   "require": {
     "simonbackx/slack-php-webhook": "^1.0",
-    "monolog/monolog": "2.1.*",
+    "monolog/monolog": "2.2.*",
     "jenssegers/blade": "^1.1",
     "giggsey/libphonenumber-for-php": "8.*",
     "league/oauth2-client": "2.*",
