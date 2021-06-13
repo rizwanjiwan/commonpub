@@ -47,6 +47,7 @@ abstract class Route
 	 */
 	public function __construct(string $url, string $target, array $parameters=array())
 	{
+        header('X-Frame-Options: DENY');
 		$this->url=$url;
 		$this->target=$target;
 		$this->parameters=$parameters;
