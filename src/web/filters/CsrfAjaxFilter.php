@@ -48,6 +48,8 @@ class CsrfAjaxFilter implements Filter
     public function pass():bool
     {
         $key=Csrf::CSRF_TOKEN_KEY;
+        if($this->obj===null)
+            return false;
         if(property_exists($this->obj,$key))
         {
             $csrf=new Csrf();
