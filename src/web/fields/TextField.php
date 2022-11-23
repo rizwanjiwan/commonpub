@@ -49,7 +49,7 @@ class TextField extends AbstractField
 			}
 			$value=$newString;
 		}
-		if(strcasecmp($value,'')===0)
+		if(($value===null)||(strcasecmp($value,'')===0))
 			$this->value=null;
 		else
 			$this->value=$value;
