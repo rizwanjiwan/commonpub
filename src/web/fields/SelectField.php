@@ -59,7 +59,7 @@ class SelectField extends AbstractField
 	{
 		if(is_array($value))
 			$value=implode(',',$value);
-		if ((strcasecmp($value, 'null') === 0) || (strcasecmp($value, '') === 0))
+		if (($value===null)||(strcasecmp($value, 'null') === 0) || (strcasecmp($value, '') === 0))
 			$this->value = null;
 		else
 			$this->value = $value;
