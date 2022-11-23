@@ -6,7 +6,7 @@
 namespace rizwanjiwan\common\classes\jobs;
 
 
-use \stdClass;
+use stdClass;
 
 interface JobProcessorInterface
 {

@@ -3,7 +3,9 @@
 namespace rizwanjiwan\common\classes\exceptions;
 
 
-class NameableException extends \Exception
+use Exception;
+
+class NameableException extends Exception
 {
 
 }

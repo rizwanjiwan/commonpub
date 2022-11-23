@@ -5,11 +5,13 @@
 
 namespace rizwanjiwan\common\classes;
 
+use Countable;
+use Iterator;
 use rizwanjiwan\common\classes\exceptions\NameableException;
 use rizwanjiwan\common\interfaces\Nameable;
 use rizwanjiwan\common\traits\NameableTrait;
 
-class NameableContainer implements \Iterator, \Countable, Nameable
+class NameableContainer implements Iterator, Countable, Nameable
 {
 	use NameableTrait;
 	/**
@@ -61,12 +63,11 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 			$this->setFriendlyName($friendlyName);
 	}
 
-	/**
-	 * Add a Namable
-	 * @param $nameable Nameable
-	 * @param bool $overwrite true to allow overwriting if something already exists with the same name
-	 * @return $this to allow for chainable adds.
-	 */
+    /**
+     * Add a Nameable
+     * @param bool $overwrite true to allow overwriting if something already exists with the same name
+     * @return $this to allow for chainable adds.
+     */
 	public function add(?Nameable $nameable,bool $overwrite=false):self
 	{
 		if($nameable===null)
@@ -81,7 +82,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 		return $this;
 	}
 	/**
-	 * Remove a Namable
+	 * Remove a Nameable
 	 * @param $nameable Nameable
 	 * @return $this to allow for chainable removes.
 	 */
@@ -100,12 +101,12 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 */
 	public function merge(NameableContainer $container)
 	{
-		foreach($container as $namable)
-			$this->add($namable);
+		foreach($container as $nameable)
+			$this->add($nameable);
 	}
 
 	/**
-	 * Get the names of the items contained in this datastructure
+	 * Get the names of the items contained in this datastructures
 	 * @return string[]
 	 */
 	public function getNames():array
@@ -149,8 +150,8 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * @return void Any returned value is ignored.
 	 * @since 5.0.0
 	 */
-	public function next()
-	{
+	public function next(): void
+    {
 		$this->index++;
 	}
 
@@ -168,7 +169,7 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	/**
 	 * Checks if current position is valid
 	 * @link http://php.net/manual/en/iterator.valid.php
-	 * @return boolean The return value will be casted to boolean and then evaluated.
+	 * @return boolean The return value will be cast to boolean and then evaluated.
 	 * Returns true on success or false on failure.
 	 * @since 5.0.0
 	 */
@@ -183,8 +184,8 @@ class NameableContainer implements \Iterator, \Countable, Nameable
 	 * @return void Any returned value is ignored.
 	 * @since 5.0.0
 	 */
-	public function rewind()
-	{
+	public function rewind(): void
+    {
 
 		$this->keys = $this->getNames();
 		$this->index=0;

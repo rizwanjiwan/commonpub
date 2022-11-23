@@ -3,7 +3,9 @@
 namespace rizwanjiwan\common\classes\exceptions;
 
 
-class RouteException extends \Exception
+use Exception;
+
+class RouteException extends Exception
 {
 
 }

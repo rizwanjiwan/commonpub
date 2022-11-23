@@ -224,6 +224,18 @@ class EmailHelper implements FormatHelper
 		return false;
 	}
 
+    /**
+     * @param EmailPerson $from
+     * @param EmailPerson|null $replyTo
+     * @param NameableContainer $to
+     * @param string $subject
+     * @param DateTime $start
+     * @param DateTime $end
+     * @param string $body
+     * @param string $location
+     * @return void
+     * @throws MailException
+     */
     public static function sendCalendarInvite(EmailPerson $from,
                                               ?EmailPerson $replyTo,
                                               NameableContainer $to,

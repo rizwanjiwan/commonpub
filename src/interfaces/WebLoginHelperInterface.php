@@ -6,6 +6,7 @@
 namespace rizwanjiwan\common\interfaces;
 
 
+use Exception;
 use rizwanjiwan\common\classes\UserIdentity;
 
 interface WebLoginHelperInterface
@@ -21,7 +22,7 @@ interface WebLoginHelperInterface
 	/**
 	 * Should be called on the $serviceResponseUrl from $this->getLoginHtml. Will set UserIdenity if successful.
 	 * @return UserIdentity
-	 * @throws \Exception on error/invalid login
+	 * @throws Exception on error/invalid login
 	 */
 	public function processServiceResponse():UserIdentity;
 

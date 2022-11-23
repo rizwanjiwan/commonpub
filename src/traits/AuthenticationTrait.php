@@ -5,6 +5,7 @@ namespace rizwanjiwan\common\traits;
 
 
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\GenericProvider;
 use League\OAuth2\Client\Provider\GoogleUser;
@@ -63,7 +64,7 @@ trait AuthenticationTrait
     /**
      * End the login process here. Will fill in UserIdentity for the user if login is successful... or Exception if shit got real.
      * @param $request Request. Should specify the self::getRouteParamMethodName()=>UserIdentity.METHOD_* and self::getRouteParamCallbackName()=>callback url in the route params
-     * @throws AuthorizationException
+     * @throws AuthorizationException|GuzzleException
      */
     protected function processCallback(Request $request)
     {
@@ -78,7 +79,7 @@ trait AuthenticationTrait
             $token = $provider->getAccessToken('authorization_code', [
                 'code' => $_GET['code']
             ]);
-            if ($method === UserIdentity::METHOD_GOOGLE)
+            if ($method == UserIdentity::METHOD_GOOGLE)
             {
                 $userGoogle = $provider->getResourceOwner($token);
                 /**@var $userGoogle GoogleUser */
@@ -94,7 +95,7 @@ trait AuthenticationTrait
                 // Use this to interact with an API on the users behalf
                 $request->respondCustom();
                 return;
-            } else if ($method === UserIdentity::METHOD_AZURE_AD)
+            } else if ($method == UserIdentity::METHOD_AZURE_AD)
             {
                 $graph = new Graph();
                 $graph->setAccessToken($token->getToken());
@@ -141,7 +142,7 @@ trait AuthenticationTrait
      */
     private function emailToDomain(?string $email):string
     {
-        if(($email===null)||(strlen($email===0))||(strpos($email,'@')===false))
+        if(($email===null)||(strlen($email)===0)||(!str_contains($email, '@')))
             throw new AuthorizationException('Invalid email "'.$email.'" ');
         $parts=explode('@',$email);
         return $parts[1];

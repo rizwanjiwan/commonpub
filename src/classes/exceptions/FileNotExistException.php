@@ -3,7 +3,9 @@
 namespace rizwanjiwan\common\classes\exceptions;
 
 
-class FileNotExistException extends \Exception
+use Exception;
+
+class FileNotExistException extends Exception
 {
 
 }

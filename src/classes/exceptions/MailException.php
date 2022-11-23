@@ -3,7 +3,9 @@
 namespace rizwanjiwan\common\classes\exceptions;
 
 
-class MailException extends \Exception
+use Exception;
+
+class MailException extends Exception
 {
 
 }

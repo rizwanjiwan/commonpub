@@ -113,13 +113,13 @@ class UserIdentity
         $authDomains=Config::getArray('AUTH_ALLOWED_DOMAINS');
 
 
-        if(($specificUsers!==false)&&(array_search($email,$specificUsers)===false))//need to validate for specific users as well
+        if(($specificUsers!==false)&&(!in_array($email, $specificUsers)))//need to validate for specific users as well
             throw new AuthorizationException('Not Authorized user: '.$email);
         else if($specificUsers===false)//they didn't limit to specific users
         {
             if($authDomains!==false)//they provided a domain list
             {
-                if(array_search($domain,$authDomains)===false)//check if the user's domain in the domian list
+                if(!in_array($domain, $authDomains))//check if the user's domain in the domian list
                     throw new AuthorizationException('Not Authorized domain: '.$email);
             }//otherwise, all domains are authorized
         }
@@ -168,11 +168,7 @@ class UserIdentity
      */
     private function generateToken(...$params):string
     {
-        $string='';
-        foreach($params as $param)
-        {
-            $string.=$param;
-        }
+        $string = implode('', $params);
         $string.=$this->secret;	//add something that the outside world doesn't have
         return password_hash($string,PASSWORD_BCRYPT);
     }
@@ -184,11 +180,7 @@ class UserIdentity
      */
     private function validateToken(string $token,...$params):bool
     {
-        $string='';
-        foreach($params as $param)
-        {
-            $string.=$param;
-        }
+        $string = implode('', $params);
         $string.=$this->secret;	//add something that the outside world doesn't have
         return password_verify($string,$token);
     }

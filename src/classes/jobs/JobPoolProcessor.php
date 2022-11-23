@@ -12,6 +12,7 @@ namespace rizwanjiwan\common\classes\jobs;
 
 use Exception;
 use Monolog\Logger;
+use Pheanstalk\Contract\PheanstalkInterface;
 use Pheanstalk\Pheanstalk;
 use rizwanjiwan\common\classes\LogManager;
 use stdClass;
@@ -61,7 +62,7 @@ class JobPoolProcessor
                 try
                 {
                     $decoded = json_decode($raw);
-                    if($this->className===false)
+                    if(!$this->className)
                     {
                         $queue->bury($job);
                         self::$log->error('No job processor defined for '.$this->pool);
@@ -113,11 +114,11 @@ class JobPoolProcessor
 		if(self::$log===null)
 			self::$log=LogManager::createLogger('JobPoolProcessor');
 		if($priority===null)
-			$priority=Pheanstalk::DEFAULT_PRIORITY;
+			$priority= PheanstalkInterface::DEFAULT_PRIORITY;
 		if($delay===null)
-			$delay=Pheanstalk::DEFAULT_DELAY;
+			$delay= PheanstalkInterface::DEFAULT_DELAY;
 		if($ttr===null)
-			$ttr=Pheanstalk::DEFAULT_TTR;
+			$ttr= PheanstalkInterface::DEFAULT_TTR;
 
 		$retryProperty=self::RETRY_PROPERTY;
 		if(property_exists($data,$retryProperty)===false)	//track how many times we've retried to allow for limited retries

@@ -65,7 +65,7 @@ class MySqlHandler extends AbstractProcessingHandler
 	 * @param bool $bubble
 	 */
 	public function __construct(
-		PDO $pdo = null,
+		PDO $pdo,
 		$table,
 		$additionalFields = array(),
 		$level = Logger::DEBUG,
@@ -198,7 +198,7 @@ class MySqlHandler extends AbstractProcessingHandler
 			}
 
 			if ($context === null) {
-				if(array_search($key, $this->fields)===false)
+				if(!in_array($key, $this->fields))
 				{
 					unset($contentArray[$key]);
 					unset($this->fields[array_search($key, $this->fields)]);
