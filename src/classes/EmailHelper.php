@@ -114,7 +114,7 @@ class EmailHelper implements FormatHelper
 	 */
 	public function getFormatted(int $format_type=null):?string
 	{
-	    if($format_type===null)
+	    if(($format_type===null)||($this->valueUnformatted===null))
 	        $format_type=self::FORMAT_NORMAL;
 		$value=strtolower(trim($this->valueUnformatted));
 		if($format_type===self::FORMAT_NORMAL)
