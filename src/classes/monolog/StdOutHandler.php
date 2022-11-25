@@ -16,9 +16,8 @@ class StdOutHandler extends AbstractProcessingHandler
 	 * @param  $record[]
 	 * @return void
 	 */
-	protected function write(\Monolog\LogRecord $record): void
+	protected function write(array $record): void
 	{
-        $recordArray=$record->toArray();
-		echo "[".$recordArray['datetime']->format('Y-m-d H:i:s')."][".$recordArray['level']."][".$recordArray['channel']."] ".$recordArray['message']."\n";
+		echo "[".$record['datetime']->format('Y-m-d H:i:s')."][".$record['level']."][".$record['channel']."] ".$record['message']."\n";
 	}
 }

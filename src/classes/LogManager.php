@@ -5,7 +5,6 @@
 
 namespace rizwanjiwan\common\classes;
 
-use Monolog\Level;
 use PDO;
 use rizwanjiwan\common\classes\monolog\HtmlRowFormatter;
 use rizwanjiwan\common\classes\monolog\LoggingBufferHandler;
@@ -138,29 +137,28 @@ class LogManager
     }
     /**
      * Get the log output level we should run at
-     * @return Level
+     * @return int 100 to 600.
      */
-    private static function getLogLevel(): Level
+    private static function getLogLevel()
     {
-        $lev=Config::get('LOG_LEV')===false?"":Config::get('LOG_LEV');
-        $logLevString=strtolower($lev);
+        $logLevString=strtolower(Config::get('LOG_LEV'));
         if(strcmp($logLevString,'debug')===0)
-            return Level::Debug;
+            return Logger::DEBUG;
         if(strcmp($logLevString,'info')===0)
-            return Level::Info;
+            return Logger::INFO;
         if(strcmp($logLevString,'notice')===0)
-            return Level::Notice;
+            return Logger::NOTICE;
         if(strcmp($logLevString,'warning')===0)
-            return Level::Warning;
+            return Logger::WARNING;
         if(strcmp($logLevString,'error')===0)
-            return Level::Error;
+            return Logger::ERROR;
         if(strcmp($logLevString,'critical')===0)
-            return Level::Critical;
+            return Logger::CRITICAL;
         if(strcmp($logLevString,'alert')===0)
-            return Level::Critical;
+            return Logger::ALERT;
         if(strcmp($logLevString,'emergency')===0)
-            return Level::Emergency;
-        return Level::Notice;
+            return Logger::EMERGENCY;
+        return Logger::NOTICE;
     }
     /**
      * Turn logging on (default is on)
