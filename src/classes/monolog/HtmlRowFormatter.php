@@ -9,6 +9,7 @@ namespace rizwanjiwan\common\classes\monolog;
 
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 class HtmlRowFormatter extends NormalizerFormatter
 {
@@ -37,9 +38,8 @@ class HtmlRowFormatter extends NormalizerFormatter
 	 * @param  array $record A record to format
 	 * @return string The formatted record
 	 */
-	public function format(\Monolog\LogRecord $logRecord)
-	{
-        $record=$logRecord->toArray();
+	public function format(array $record): string
+    {
         $output = '<tr style="border:1px;">';
 		$output.='<td style="border:1px;padding: 4px;text-align: left;background: '.self::$logLevels[$record['level']].'">'.htmlentities($record['level_name']).'</td>';
 		$output.='<td style="border:1px;padding: 4px;text-align: left;background: #eeeeee">'.htmlentities($record['channel']).'</td>';

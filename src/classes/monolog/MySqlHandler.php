@@ -161,9 +161,8 @@ class MySqlHandler extends AbstractProcessingHandler
 	 * @param  $record[]
 	 * @return void
 	 */
-	protected function write(\Monolog\LogRecord $logRecord): void
+	protected function write(array $record): void
 	{
-        $record=$logRecord->toArray();
 
 		if (!$this->initialized) {
 			$this->initialize();

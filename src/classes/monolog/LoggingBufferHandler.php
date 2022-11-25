@@ -31,9 +31,8 @@ class LoggingBufferHandler extends AbstractProcessingHandler
 	 * @param  array $record
 	 * @return void
 	 */
-	protected function write(\Monolog\LogRecord $logRecord): void
+	protected function write(array $record): void
 	{
-        $record=$logRecord->toArray();
 		self::$buffer.=(string)$record['formatted'];
 	}
 }
