@@ -116,7 +116,7 @@ class EmailHelper implements FormatHelper
 	{
 	    if(($format_type===null)||($this->valueUnformatted===null))
 	        $format_type=self::FORMAT_NORMAL;
-		$value=strtolower(trim($this->valueUnformatted));
+		$value=strtolower(trim($this->valueUnformatted??""));
 		if($format_type===self::FORMAT_NORMAL)
 			return $value;
 		//they want host or user only
