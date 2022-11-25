@@ -161,8 +161,9 @@ class MySqlHandler extends AbstractProcessingHandler
 	 * @param  $record[]
 	 * @return void
 	 */
-	protected function write(array $record): void
+	protected function write(\Monolog\LogRecord $record): void
 	{
+        $recordArray=$record->toArray();
 
 		if (!$this->initialized) {
 			$this->initialize();
@@ -177,17 +178,17 @@ class MySqlHandler extends AbstractProcessingHandler
 		 * getting added to $record['extra']
 		 * @see https://github.com/Seldaek/monolog/blob/master/doc/02-handlers-formatters-processors.md
 		 */
-		if (isset($record['extra'])) {
-			$record['context'] = array_merge($record['context'], $record['extra']);
+		if (isset($recordArray['extra'])) {
+            $recordArray['context'] = array_merge($recordArray['context'], $recordArray['extra']);
 		}
 
 		//'context' contains the array
 		$contentArray = array_merge(array(
-			'channel' => $record['channel'],
-			'level' => $record['level'],
-			'message' => $record['message'],
-			'time' => $record['datetime']->format('Y-m-d H:i:s')
-		), $record['context']);
+			'channel' => $recordArray['channel'],
+			'level' => $recordArray['level'],
+			'message' => $recordArray['message'],
+			'time' => $recordArray['datetime']->format('Y-m-d H:i:s')
+		), $recordArray['context']);
 
 		// unset array keys that are passed put not defined to be stored, to prevent sql errors
 		foreach($contentArray as $key => $context) {

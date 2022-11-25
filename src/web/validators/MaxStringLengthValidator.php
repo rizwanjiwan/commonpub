@@ -27,7 +27,7 @@ class MaxStringLengthValidator implements Validator
 	 */
 	public function validate(AbstractField $field, NameableContainer $fields)
 	{
-		$len=strlen($field->getValue());
+		$len=strlen($field->getValue()??"");
 		if($len>$this->maxLength)
 			throw new InvalidValueException('Maximum is '.$this->maxLength.' characters');
 	}
