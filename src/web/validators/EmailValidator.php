@@ -22,7 +22,7 @@ class EmailValidator implements Validator
 	public function validate(AbstractField $field, NameableContainer $fields)
 	{
 		$value=$field->getValue();
-		if(strlen($value)===0)
+		if(strlen($value??"")===0)
 			return;//nothing to check
 		$helper=new EmailHelper($value);
 		if($helper->isValid()===false)
