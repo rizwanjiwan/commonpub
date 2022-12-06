@@ -74,7 +74,7 @@ class RequestHandler
 	 * @param $route Route to add
      * @param string|null $friendlyName is a friendly name to look up later. Null means it won't be saved.
 	 */
-	public function addRoute(Route $route,?string $friendlyName)
+	public function addRoute(Route $route,?string $friendlyName=null)
 	{
 		//route URLS for our purposes shouldn't start or end with a /
 		$url=trim( $route->getUrl(), "/" );
