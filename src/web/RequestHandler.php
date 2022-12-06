@@ -21,6 +21,11 @@ class RequestHandler
 	 */
 	private array $routes=array();
 
+    /**
+     * @var string[] key= user-friendly name and value = url to route to
+     */
+    private static array $namedUrls=array();
+
 	private $chainedExceptionHandler; //for chaining to the previous handler if we don't deal with it.
 
     private bool $exceptionSentToSentry=false;//true if we send something to sentry to avoid multiple sends.
@@ -67,14 +72,24 @@ class RequestHandler
 	}
 	/**
 	 * @param $route Route to add
+     * @param string|null $friendlyName is a friendly name to look up later. Null means it won't be saved.
 	 */
-	public function addRoute(Route $route)
+	public function addRoute(Route $route,?string $friendlyName)
 	{
 		//route URLS for our purposes shouldn't start or end with a /
 		$url=trim( $route->getUrl(), "/" );
 		$this->routes[$url]=$route;
-
+        if($friendlyName!==null){
+            self::$namedUrls[$friendlyName]=$route->getUrl();
+        }
 	}
+    public static function getUrl(string $friendlyName):string
+    {
+        if(array_key_exists($friendlyName,self::$namedUrls)){
+            return self::$namedUrls[$friendlyName];
+        }
+        return "/404/";
+    }
 	public function registerForShutdownErrors()
 	{
 		register_shutdown_function(array($this, 'handelShutdownError'));
