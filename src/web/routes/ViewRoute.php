@@ -23,7 +23,7 @@ class ViewRoute extends Route
 	 * Do the actual routing work
 	 * @param $request Request
 	 */
-	public function doRouting(Request $request)
+	protected function doRoutingImp(Request $request)
 	{
 		$request->log->debug('Route to view '.$this->getTarget());
 		$request->respondView($this->getTarget(),

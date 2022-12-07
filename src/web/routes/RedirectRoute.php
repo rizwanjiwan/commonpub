@@ -44,7 +44,7 @@ class RedirectRoute extends Route
 	 * Do the actual routing work
 	 * @param $request Request
 	 */
-	public function doRouting(Request $request)
+	protected function doRoutingImp(Request $request)
 	{
 		if($this->alert!==null)
 			new Alert($this->alertType,$this->alert);

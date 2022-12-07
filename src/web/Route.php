@@ -39,6 +39,11 @@ abstract class Route
 	 */
 	private array $parameters;
 
+    /**
+     * @var Filter[] $filters filters to run on this route
+     */
+    private array $filters;
+
 	/**
 	 * Route constructor.
 	 * @param $url string the url that this route is for
@@ -58,12 +63,23 @@ abstract class Route
 	 */
 	public abstract function getType():int;
 
+    /**
+     * Do the  routing work
+     * @param $request Request
+     * @throws RouteException on error
+     */
+    public function doRouting($request):void
+    {
+        foreach($this->filters as $filter)
+            $filter->filter($request);
+        $this->doRoutingImp($request);
+    }
 	/**
-	 * Do the actual routing work
+	 * Do the actual routing work by implemenations
 	 * @param $request Request
 	 * @throws RouteException on error
 	 */
-	public abstract function doRouting(Request $request);
+	protected abstract function doRoutingImp(Request $request);
 
 	/**
 	 * @return string the url that this route is for
@@ -72,6 +88,17 @@ abstract class Route
 	{
 		return $this->url;
 	}
+
+    /**
+     * Add a route specific filter
+     * @param Filter $routeSpecificFilter
+     * @return $this
+     */
+    public function addFilter(Filter $routeSpecificFilter):self
+    {
+        array_push($this->filters,$routeSpecificFilter);
+        return $this;
+    }
 
 	/**
 	 * @return string[] associative key value pairs. They get passed to Controllers in the $request->routeParams and to views as 'routeParams.'

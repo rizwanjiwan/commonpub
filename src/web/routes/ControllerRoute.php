@@ -26,7 +26,7 @@ class ControllerRoute extends Route
 	 * @param $request Request
 	 * @throws RouteException on error
 	 */
-	public function doRouting(Request $request)
+	protected function doRoutingImp(Request $request)
 	{
 		$request->log->debug('Route to controller '.$this->getTarget());
 		$targetParts=explode('.',$this->getTarget());
