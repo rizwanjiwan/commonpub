@@ -42,7 +42,7 @@ abstract class Route
     /**
      * @var Filter[] $filters filters to run on this route
      */
-    private array $filters;
+    private array $filters=array();
 
 	/**
 	 * Route constructor.
