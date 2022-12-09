@@ -24,7 +24,7 @@ class MinStringLengthValidator implements Validator
     public function validate(AbstractField $field, NameableContainer $fields)
     {
         $len=strlen($field->getValue()??"");
-        if($len>$this->minLength)
+        if($len<$this->minLength)
             throw new InvalidValueException('Minimum is '.$this->minLength.' characters');
     }
 }
