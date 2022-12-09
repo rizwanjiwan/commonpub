@@ -86,7 +86,7 @@ class RequestHandler
     public static function getUrl(string $friendlyName):string
     {
         if(array_key_exists($friendlyName,self::$namedUrls)){
-            return self::$namedUrls[$friendlyName];
+            return self::$namedUrls[$friendlyName]."/";
         }
         return "/404/";
     }
