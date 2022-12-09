@@ -80,13 +80,18 @@ class RequestHandler
 		$url=trim( $route->getUrl(), "/" );
 		$this->routes[$url]=$route;
         if($friendlyName!==null){
-            self::$namedUrls[$friendlyName]=$url;
+            if($route->getType()!==Route::ROUTE_TYPE_REDIRECT){//throw the slashes on it
+                self::$namedUrls[$friendlyName]="/".$url."/";
+            }
+            else{
+                self::$namedUrls[$friendlyName]=$route->getUrl();
+            }
         }
 	}
     public static function getUrl(string $friendlyName):string
     {
         if(array_key_exists($friendlyName,self::$namedUrls)){
-            return self::$namedUrls[$friendlyName]."/";
+            return self::$namedUrls[$friendlyName];
         }
         return "/404/";
     }
