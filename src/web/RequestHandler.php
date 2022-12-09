@@ -80,7 +80,7 @@ class RequestHandler
 		$url=trim( $route->getUrl(), "/" );
 		$this->routes[$url]=$route;
         if($friendlyName!==null){
-            self::$namedUrls[$friendlyName]=$route->getUrl();
+            self::$namedUrls[$friendlyName]=$url;
         }
 	}
     public static function getUrl(string $friendlyName):string
