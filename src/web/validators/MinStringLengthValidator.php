@@ -25,6 +25,6 @@ class MinStringLengthValidator implements Validator
     {
         $len=strlen($field->getValue()??"");
         if($len<$this->minLength)
-            throw new InvalidValueException('Minimum is '.$this->minLength.' characters');
+            throw new InvalidValueException('Minimum '.$field->getFriendlyName().' length is '.$this->minLength.' characters');
     }
 }
