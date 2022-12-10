@@ -16,6 +16,7 @@ class UserIdentity
     const METHOD_GOOGLE=1;
     const METHOD_AZURE_AD=2;
     const METHOD_DEV_MODE=3;
+    const METHOD_DB=4;
 
     private ?string $name=null;
     private ?string $domain=null;
@@ -24,6 +25,7 @@ class UserIdentity
     private ?string $secret=null;
     private bool $isAuthed=false;
     private ?int $method=null;
+    private ?int $dbId=null;    //ony used in implementations that need an ID into a DB
     private Logger $log;
 
     /**
@@ -56,7 +58,12 @@ class UserIdentity
             (array_key_exists('token',$_SESSION)))
         {
             $this->log->debug('Found session variables for user ');
-            $validToken=$this->validateToken($_SESSION['token'],$_SESSION['name'],$_SESSION['domain'],$_SESSION['email'],$_SESSION['expiry']);
+            $validToken=false;
+            if((array_key_exists('dbId',$_SESSION)))
+                $validToken=$this->validateToken($_SESSION['token'],$_SESSION['name'],$_SESSION['domain'],$_SESSION['email'],$_SESSION['expiry'],$_SESSION['dbId']);
+            else
+                $validToken=$this->validateToken($_SESSION['token'],$_SESSION['name'],$_SESSION['domain'],$_SESSION['email'],$_SESSION['expiry']);
+
             if((!$validToken)||
                 ($_SESSION['expiry']<time()))
             {
@@ -71,6 +78,8 @@ class UserIdentity
                 $this->email=$_SESSION['email'];
                 $this->picture=$_SESSION['picture'];
                 $this->method=$_SESSION['method'];
+                if((array_key_exists('dbId',$_SESSION)))
+                    $this->dbId=$_SESSION['dbId'];
                 $this->isAuthed=true;
                 $this->log->debug('User logged in by session:'.$this->email);
             }
@@ -80,7 +89,7 @@ class UserIdentity
             $this->log->debug('Dev mode ');
             try
             {
-                $this->setIdentity('Developer Doe', 'doe.ca', 'developer@doe.ca', null, self::METHOD_DEV_MODE);
+                $this->setIdentity('Developer Doe', 'doe.ca', 'developer@doe.ca', null, self::METHOD_DEV_MODE,null);
             }
             catch(AuthorizationException $e)
             {
@@ -100,9 +109,10 @@ class UserIdentity
      * @param $email string email of the user
      * @param $picture ?string url to the user's picture
      * @param $method int the METHOD_* of managing identity
+     * @param string|null $dbId optional database id to store in the identity
      * @throws AuthorizationException if there is an issue due to the user's access
      */
-    public function setIdentity(string $name,string $domain, string $email,?string $picture,int $method)
+    public function setIdentity(string $name,string $domain, string $email,?string $picture,int $method,?string $dbId)
     {
         $this->log->info('Logged in by setIdentity: '.$email);
         //make sure they're from an allowed domain
@@ -132,13 +142,18 @@ class UserIdentity
         $this->email=$email;
         $this->picture=$picture;
         $this->method=$method;
+        $this->dbId=$dbId;
         $_SESSION['name']=$name;
         $_SESSION['domain']=$domain;
         $_SESSION['email']=$email;
         $_SESSION['picture']=$picture;
         $_SESSION['method']=$method;
         $_SESSION['expiry']=time()+(60*60*12);		//max duration
-        $_SESSION['token']=$this->generateToken($name,$domain,$email,$_SESSION['expiry']);
+        if($this->dbId===null)
+            $_SESSION['token']=$this->generateToken($name,$domain,$email,$_SESSION['expiry']);
+        else
+            $_SESSION['token']=$this->generateToken($name,$domain,$email,$_SESSION['expiry'],$dbId);
+
     }
 
     /**
@@ -159,6 +174,8 @@ class UserIdentity
         unset($_SESSION['expiry']);
         unset($_SESSION['token']);
         unset($_SESSION['method']);
+        if((array_key_exists('dbId',$_SESSION)))
+            unset($_SESSION['dbId']);
     }
 
     /**
@@ -229,6 +246,8 @@ class UserIdentity
             return 'Office 365';
         if($this->method===self::METHOD_DEV_MODE)
             return 'DevMode';
+        if($this->method===self::METHOD_DB)
+            return 'DB';
         return 'Unknown';
     }
 
