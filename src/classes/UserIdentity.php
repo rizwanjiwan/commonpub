@@ -152,7 +152,10 @@ class UserIdentity
         if($this->dbId===null)
             $_SESSION['token']=$this->generateToken($name,$domain,$email,$_SESSION['expiry']);
         else
+        {
+            $_SESSION['dbId']=$dbId;
             $_SESSION['token']=$this->generateToken($name,$domain,$email,$_SESSION['expiry'],$dbId);
+        }
 
     }
 
