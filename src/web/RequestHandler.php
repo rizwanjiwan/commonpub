@@ -81,7 +81,7 @@ class RequestHandler
 		$this->routes[$url]=$route;
         if($friendlyName!==null){
             if($route->getType()!==Route::ROUTE_TYPE_REDIRECT){//throw the slashes on it
-                self::$namedUrls[$friendlyName]="/".$url."/";
+                self::$namedUrls[$friendlyName]="/".$url.(strlen($url)>0?"/":"");   //strlen is for root of domain
             }
             else{
                 self::$namedUrls[$friendlyName]=$route->getUrl();
