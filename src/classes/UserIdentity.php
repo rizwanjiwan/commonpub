@@ -235,6 +235,10 @@ class UserIdentity
             return $this->method;
         return '';
     }
+    public function getDbId():?int
+    {
+        return $this->dbId;
+    }
 
     /**
      * Get the method as a user friendly name
