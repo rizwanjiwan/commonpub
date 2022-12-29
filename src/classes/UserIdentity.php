@@ -112,7 +112,7 @@ class UserIdentity
      * @param string|null $dbId optional database id to store in the identity
      * @throws AuthorizationException if there is an issue due to the user's access
      */
-    public function setIdentity(string $name,string $domain, string $email,?string $picture,int $method,?string $dbId)
+    public function setIdentity(string $name,string $domain, string $email,?string $picture,int $method,?string $dbId=null)
     {
         $this->log->info('Logged in by setIdentity: '.$email);
         //make sure they're from an allowed domain
