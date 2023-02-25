@@ -22,7 +22,7 @@ class IntegerValidator implements Validator
 	public function validate(AbstractField $field,NameableContainer $fields)
 	{
 		$value=$field->getValue();
-		if(strlen($value)===0)
+		if(($value===null)||(strlen($value)===0))
 			return;//nothing to check
 		if(ctype_digit($value)===false)
 			throw new InvalidValueException('Enter a whole number');
