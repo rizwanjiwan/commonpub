@@ -29,11 +29,14 @@ class NumericRangeValidator  implements Validator
 	 * @throws InvalidValueException if not valid
 	 */
 	public function validate(AbstractField $field, NameableContainer $fields)
-	{
-		$value=$field->getValue();
-
-		if(($value>$this->max)||($value<$this->min))
-			throw new InvalidValueException("Must be between {$this->min} and {$this->max}");
+    {
+        $value = $field->getValue();
+        if (($value === null) || (strcmp($value, "") === 0)) {
+            return;
+        }
+        if (($value > $this->max) || ($value < $this->min)) {
+            throw new InvalidValueException("Must be between {$this->min} and {$this->max}");
+        }
 
 	}
 }
