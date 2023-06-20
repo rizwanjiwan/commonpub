@@ -6,6 +6,7 @@
 namespace rizwanjiwan\common\classes\monolog;
 
 
+use rizwanjiwan\common\classes\Config;
 use rizwanjiwan\common\classes\LogManager;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
@@ -87,6 +88,10 @@ class MySqlHandler extends AbstractProcessingHandler
 	private function initialize()
 	{
 	   // LogManager::debug('[MySqlHandler] Initialize()');
+        if(Config::getBool('DB_LOG_SKIP_INIT')===true){ //don't have to init every time
+            $this->initialized = true;
+            return;
+        }
 		$this->pdo->exec(
 			'CREATE TABLE IF NOT EXISTS `'.$this->table.'` '
 			.'(id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY, channel VARCHAR(255), level INTEGER, message LONGTEXT, time Datetime, INDEX(channel) USING HASH, INDEX(level) USING HASH, INDEX(time) USING BTREE)'

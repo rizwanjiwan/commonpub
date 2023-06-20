@@ -28,6 +28,9 @@
   "config": {
     "platform": {
       "php": "8.0"
+    },
+    "allow-plugins": {
+      "php-http/discovery": true
     }
   }
 }

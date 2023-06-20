@@ -7,6 +7,17 @@ DB_DATABASE=probatio
 
 #if the above aren't provided, you must provide a path to a logging directory with a filename prefix:
 LOG_FILE=/../../../../../logs/log
+#optional for db logging
+#provide these DB_LOG variables to use DB logging
+DB_LOG_HOST=127.0.0.1
+DB_LOG_PORT=3306
+DB_LOG_LOGIN=username
+DB_LOG_PASSWORD=password
+DB_LOG_DATABASE=log
+DB_LOG_TABLE=log
+#do you want to skip initializing the log table? Default is false
+DB_LOG_SKIP_INIT=[true/false]
+
 
 #other paths
 CACHE_DIR=/../../../../../tmp/cache/
