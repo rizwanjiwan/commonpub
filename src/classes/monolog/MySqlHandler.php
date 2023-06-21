@@ -88,44 +88,42 @@ class MySqlHandler extends AbstractProcessingHandler
 	private function initialize()
 	{
 	   // LogManager::debug('[MySqlHandler] Initialize()');
-        if(Config::getBool('DB_LOG_SKIP_INIT')===true){ //don't have to init every time
-            $this->initialized = true;
-            return;
+        if(Config::getBool('DB_LOG_SKIP_INIT')!==true){ //don't have to init every time
+            $this->pdo->exec(
+                'CREATE TABLE IF NOT EXISTS `'.$this->table.'` '
+                .'(id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY, channel VARCHAR(255), level INTEGER, message LONGTEXT, time Datetime, INDEX(channel) USING HASH, INDEX(level) USING HASH, INDEX(time) USING BTREE)'
+            );
+            //Read out actual columns
+            $actualFields = array();
+            $rs = $this->pdo->query('SELECT * FROM `'.$this->table.'` LIMIT 0');
+            for ($i = 0; $i < $rs->columnCount(); $i++) {
+                $col = $rs->getColumnMeta($i);
+                $actualFields[] = $col['name'];
+            }
+
+            //Calculate changed entries
+            $removedColumns = array_diff(
+                $actualFields,
+                $this->additionalFields,
+                $this->defaultfields
+            );
+            $addedColumns = array_diff($this->additionalFields, $actualFields);
+
+            //Remove columns
+            if (!empty($removedColumns)) {
+                foreach ($removedColumns as $c) {
+                    $this->pdo->exec('ALTER TABLE `'.$this->table.'` DROP `'.$c.'`;');
+                }
+            }
+
+            //Add columns
+            if (!empty($addedColumns)) {
+                foreach ($addedColumns as $c) {
+                    $this->pdo->exec('ALTER TABLE `'.$this->table.'` add `'.$c.'` TEXT NULL DEFAULT NULL;');
+                }
+            }
+
         }
-		$this->pdo->exec(
-			'CREATE TABLE IF NOT EXISTS `'.$this->table.'` '
-			.'(id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY, channel VARCHAR(255), level INTEGER, message LONGTEXT, time Datetime, INDEX(channel) USING HASH, INDEX(level) USING HASH, INDEX(time) USING BTREE)'
-		);
-
-		//Read out actual columns
-		$actualFields = array();
-		$rs = $this->pdo->query('SELECT * FROM `'.$this->table.'` LIMIT 0');
-		for ($i = 0; $i < $rs->columnCount(); $i++) {
-			$col = $rs->getColumnMeta($i);
-			$actualFields[] = $col['name'];
-		}
-
-		//Calculate changed entries
-		$removedColumns = array_diff(
-			$actualFields,
-			$this->additionalFields,
-			$this->defaultfields
-		);
-		$addedColumns = array_diff($this->additionalFields, $actualFields);
-
-		//Remove columns
-		if (!empty($removedColumns)) {
-			foreach ($removedColumns as $c) {
-				$this->pdo->exec('ALTER TABLE `'.$this->table.'` DROP `'.$c.'`;');
-			}
-		}
-
-		//Add columns
-		if (!empty($addedColumns)) {
-			foreach ($addedColumns as $c) {
-				$this->pdo->exec('ALTER TABLE `'.$this->table.'` add `'.$c.'` TEXT NULL DEFAULT NULL;');
-			}
-		}
 
 		// merge default and additional field to one array
 		$this->defaultfields = array_merge($this->defaultfields, $this->additionalFields);
