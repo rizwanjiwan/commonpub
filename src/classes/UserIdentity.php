@@ -33,6 +33,8 @@ class UserIdentity
      */
     protected function __construct()
     {
+        $this->log=LogManager::createLogger('Common');
+        $this->log->info('Start');
         if(!isset($_SESSION))
         {
             try#avoid bad cookie values: https://stackoverflow.com/questions/32898857/session-start-issues-regarding-illegal-characters-empty-session-id-and-failed
@@ -44,8 +46,8 @@ class UserIdentity
                 session_start();//if it fails again, we're SOL...
             }
         }
+        $this->log->info('Done session');
 
-        $this->log=LogManager::createLogger('Common');
 
         $this->secret=Config::get('AUTH_SECRET');
         //check if there is a session already set, validate it if it is
@@ -57,7 +59,7 @@ class UserIdentity
             (array_key_exists('method',$_SESSION))&&
             (array_key_exists('token',$_SESSION)))
         {
-            $this->log->debug('Found session variables for user ');
+            $this->log->info('Found session variables for user ');
             $validToken=false;
             if((array_key_exists('dbId',$_SESSION)))
                 $validToken=$this->validateToken($_SESSION['token'],$_SESSION['name'],$_SESSION['domain'],$_SESSION['email'],$_SESSION['expiry'],$_SESSION['dbId']);
@@ -67,7 +69,7 @@ class UserIdentity
             if((!$validToken)||
                 ($_SESSION['expiry']<time()))
             {
-                $this->log->debug('Invalid token or expired');
+                $this->log->info('Invalid token or expired');
                 $this->clearIdentity();	//invalid or expired
 
             }
@@ -81,12 +83,12 @@ class UserIdentity
                 if((array_key_exists('dbId',$_SESSION)))
                     $this->dbId=$_SESSION['dbId'];
                 $this->isAuthed=true;
-                $this->log->debug('User logged in by session:'.$this->email);
+                $this->log->info('User logged in by session:'.$this->email);
             }
         }
         elseif((strcmp(Config::get('ENV'),'dev')===0)&&(Config::getBool('LOGIN_BYPASS')===true))
         {//support dev mode
-            $this->log->debug('Dev mode ');
+            $this->log->info('Dev mode ');
             try
             {
                 $this->setIdentity('Developer Doe', 'doe.ca', 'developer@doe.ca', null, self::METHOD_DEV_MODE,null);
