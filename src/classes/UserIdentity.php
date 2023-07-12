@@ -34,19 +34,19 @@ class UserIdentity
     protected function __construct()
     {
         $this->log=LogManager::createLogger('Common');
-        $this->log->info('Start');
         if(!isset($_SESSION))
         {
             try#avoid bad cookie values: https://stackoverflow.com/questions/32898857/session-start-issues-regarding-illegal-characters-empty-session-id-and-failed
             {
+                $this->log->info('Session Start');
                 session_start();
+                $this->log->info('Done session start');
             }catch(Exception $e)
             {
                 session_regenerate_id();
                 session_start();//if it fails again, we're SOL...
             }
         }
-        $this->log->info('Done session');
 
 
         $this->secret=Config::get('AUTH_SECRET');
