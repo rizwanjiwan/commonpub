@@ -38,9 +38,7 @@ class UserIdentity
         {
             try#avoid bad cookie values: https://stackoverflow.com/questions/32898857/session-start-issues-regarding-illegal-characters-empty-session-id-and-failed
             {
-                $this->log->info('Session Start');
                 session_start();
-                $this->log->info('Done session start');
             }catch(Exception $e)
             {
                 session_regenerate_id();
