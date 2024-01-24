@@ -57,7 +57,7 @@ class UserIdentity
             (array_key_exists('method',$_SESSION))&&
             (array_key_exists('token',$_SESSION)))
         {
-            $this->log->info('Found session variables for user ');
+            $this->log->debug('Found session variables for user ');
             $validToken=false;
             if((array_key_exists('dbId',$_SESSION)))
                 $validToken=$this->validateToken($_SESSION['token'],$_SESSION['name'],$_SESSION['domain'],$_SESSION['email'],$_SESSION['expiry'],$_SESSION['dbId']);
