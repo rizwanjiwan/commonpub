@@ -67,7 +67,7 @@ class UserIdentity
             if((!$validToken)||
                 ($_SESSION['expiry']<time()))
             {
-                $this->log->info('Invalid token or expired');
+                $this->log->info('Invalid token or expired: '. $_SESSION['email']);
                 $this->clearIdentity();	//invalid or expired
 
             }
@@ -81,7 +81,7 @@ class UserIdentity
                 if((array_key_exists('dbId',$_SESSION)))
                     $this->dbId=$_SESSION['dbId'];
                 $this->isAuthed=true;
-                $this->log->info('User logged in by session:'.$this->email);
+                $this->log->debug('User logged in by session:'.$this->email);
             }
         }
         elseif((strcmp(Config::get('ENV'),'dev')===0)&&(Config::getBool('LOGIN_BYPASS')===true))
