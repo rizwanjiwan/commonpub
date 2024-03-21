@@ -51,6 +51,9 @@ class ConditionalValueValidator implements Validator
 			throw new InvalidValueException($this->fieldName." not provided");
 		/**@var $conditionField AbstractField*/
 		$value=$conditionField->getValue();
+        if($value===null){
+            $value="";
+        }
 		$equals=false;
 		if(is_array($value))//check if the value of interest is in the array
 			$equals=array_search($this->value,$value);
