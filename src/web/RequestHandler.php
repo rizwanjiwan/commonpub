@@ -135,7 +135,7 @@ class RequestHandler
 			if($fatal)
 				$request->log->error("Fatal: ".$message);
 			else
-				$request->log->error($message);
+				$request->log->warning($message);
 		}
 		//output error
 		if($fatal)
