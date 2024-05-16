@@ -14,6 +14,8 @@ class SearchQueryDto
     public ?int $page;
     public array $filters=array();
     public ?int $sequence;
+    //Associative array of the query parsed by this dto
+    public array $rawRequestInput;
 
 
     /**
@@ -73,5 +75,6 @@ class SearchQueryDto
                 $this->filters[$key]=$val;
             }
         }
+        $this->rawRequestInput=$obj;    //expose the raw query
     }
 }
