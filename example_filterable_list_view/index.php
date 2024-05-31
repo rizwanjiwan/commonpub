@@ -13,7 +13,7 @@ $rh->registerForShutdownErrors();
 
 //Controller which will render html.blade.php to show this list
 $rh->addRoute(
-    (new ControllerRoute('/list','ItemController.index')),
+    (new ControllerRoute('/list','ItemController.list')),
     'listItems');
 
 //where we link to when the user clicks on a search result
