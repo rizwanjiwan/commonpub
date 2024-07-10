@@ -31,18 +31,7 @@ class FormHelper
             }
         }
     }
-    /**
-     * Called by the view to get the value needed
-     * @param string $key the key you want the value for
-     * @return string the value
-     */
-    public function get(string $key):string
-    {
-        if(array_key_exists($key,$_REQUEST)){
-            return $this->getValue($key,$_REQUEST[$key]);
-        }
-        return $this->getValue($key);
-    }
+
 
     /**
      * Get any errors for a given field
@@ -71,22 +60,35 @@ class FormHelper
         $this->defaults[$key]=$value;
         return $this;
     }
+
+    /**
+     * Called by the view to get the value needed
+     * @param string $key the key you want the value for
+     * @return string the value
+     */
+    public function get(string $key):string
+    {
+        $defaultValue="";
+
+        if(array_key_exists($key,$_REQUEST)){
+            $defaultValue=$_REQUEST[$key];
+        }
+        elseif(array_key_exists($key,$this->defaults)){
+            $defaultValue=$this->defaults[$key];;
+        }
+        return $this->getValue($key);
+    }
     /**
      * Get the value to fill the form with for a specific field.
-     * Override this if
+     * This will only be called if there is no override provided by the
+     * instanciator of this class
+     * Override this which, by default, returns an empty string
      * @param string $key the field key we want a value from
-     * @param string|null $userProvidedValue the value the user entered or null if we don't have a user value
      * @return string the value to fill the $key form field with
      */
-    protected function getValue(string $key, ?string $userProvidedValue = null): string
+    protected function getValue(string $key): string
     {
-        if($userProvidedValue!==null){
-            return $userProvidedValue;
-        }
-        if(array_key_exists($key,$this->defaults)){
-            return $this->defaults[$key];
-        }
-        return "";  //empty if nothing else can be found
+        return "";
     }
 
 }
