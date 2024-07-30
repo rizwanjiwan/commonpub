@@ -68,13 +68,11 @@ class FormHelper
      */
     public function get(string $key):string
     {
-        $defaultValue="";
-
         if(array_key_exists($key,$_REQUEST)){
-            $defaultValue=$_REQUEST[$key];
+            return $_REQUEST[$key];
         }
         elseif(array_key_exists($key,$this->defaults)){
-            $defaultValue=$this->defaults[$key];;
+            return $this->defaults[$key];
         }
         return $this->getValue($key);
     }
