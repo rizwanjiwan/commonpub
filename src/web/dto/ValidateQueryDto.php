@@ -46,6 +46,10 @@ class ValidateQueryDto
             $this->fields->add($fieldGenerator->toField($key,$val));
         }
         //get the field and the validators for this field
+        $field=$this->fieldToValidate=$this->fields->get($json[ValidatableKeys::FIELD_BEING_VALIDATED]);
+        if($field===null){
+            throw new DtoException('Missing field to validate value');
+        }
         $this->fieldToValidate=$this->fields->get($json[ValidatableKeys::FIELD_BEING_VALIDATED]);
     }
 
