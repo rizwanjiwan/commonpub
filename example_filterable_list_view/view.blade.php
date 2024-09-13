@@ -13,11 +13,12 @@ use rizwanjiwan\common\web\fields\SelectField;
         'appTagId'=>'list',
         'linkUrl'=>\rizwanjiwan\common\web\RequestHandler::getUrl('viewItem'),
         'fields'=>$fields,
-        'dropDownFilters'=>$filters
+        'dropDownFilters'=>$filters,
+        'linkKeyId'=>'id'
         ])
 
 @include('components.filterablelist.js',[
-       'appTagId'=>'fileList',
+       'appTagId'=>'list',
        'fields'=>$fields,
        'dropDownFilters'=>$filters,
        'searchEndpoint'=>\rizwanjiwan\common\web\RequestHandler::getUrl('filterItemApi')

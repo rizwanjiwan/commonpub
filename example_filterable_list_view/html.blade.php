@@ -1,6 +1,6 @@
 <?php
 //HTML example for views where the controller implements SearchTrait
-use rizwanjiwan\common\classes\FieldContainer
+use rizwanjiwan\common\classes\FieldContainer;
 use rizwanjiwan\common\web\fields\SelectField;
 
 /**
@@ -8,6 +8,7 @@ use rizwanjiwan\common\web\fields\SelectField;
  * @var FieldContainer $fields AbstractField you'd like to display with unique name=api call key. Values aren't used
  * @var string $linkUrl where to link them to when they click (will slap on the id into the get params)
  * @var SelectField[]|null $dropDownFilters of values for the dropdown filters
+ * @var string $linkKeyId the name of the "ID" key
  */
 
 ?>
@@ -129,7 +130,7 @@ use rizwanjiwan\common\web\fields\SelectField;
                     <tbody>
                     <tr v-for="row in rows">
                         <td v-for="field in fields">
-                            <a v-bind:href="'{{$linkUrl}}?{{Keys::ID}}='+row.{{Keys::ID}}">
+                            <a v-bind:href="'{{$linkUrl}}?{{$linkKeyId}}='+row.{{$linkKeyId}}">
                                 @{{ row[field.key] }}
                             </a>
                         </td>
@@ -151,3 +152,4 @@ use rizwanjiwan\common\web\fields\SelectField;
         </div>
 
     </div>
+</div>
