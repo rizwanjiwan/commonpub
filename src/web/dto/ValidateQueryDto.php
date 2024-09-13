@@ -19,7 +19,7 @@ class ValidateQueryDto
     /**
      * @var AbstractField The field we're validating
      */
-    public AbstractField $fieldToValidate;
+    public ?AbstractField $fieldToValidate;
 
     /**
      *
