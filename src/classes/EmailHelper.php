@@ -9,6 +9,7 @@ namespace rizwanjiwan\common\classes;
 use DateTime;
 use DateTimeZone;
 use PHPMailer\PHPMailer\Exception;
+use rizwanjiwan\common\classes\exceptions\FileNotExistException;
 use rizwanjiwan\common\classes\exceptions\MailException;
 use rizwanjiwan\common\classes\jobs\JobPoolProcessor;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -296,14 +297,13 @@ END:VCALENDAR';
      * @param $to NameableContainer of EmailPerson - the addresses to send to
      * @param $subject string subject
      * @param $body string html body
-     * @param array|null $attachment null unused but placeholder for the future
+     * @param array|null $attachment file paths of files to attach
      * @param null|int $priority The priority you want to assign to this job or null for default (1024)
      * @param null|int $delay the delay in seconds you want to assign to this job or null for default (0)
      */
 	public static function createSendMailJob(string $pool,EmailPerson $from,?EmailPerson $replyTo,NameableContainer $to,string $subject,string $body,?array $attachment=null,?int $priority=null,?int $delay=null)	//todo: add attachment support
 	{
-		if(strcmp(Config::get('ENV'),'prod')===0)
-		{
+		if(strcmp(Config::get('ENV'),'prod')===0) {
 			//encode everything we need into a stdClass
 			$obj = new stdClass();
 			$obj->from = $from->stdClassEncode();
@@ -315,6 +315,13 @@ END:VCALENDAR';
 
 			foreach($to as $add) /**@var $add EmailPerson*/
 				array_push($obj->to,$add->stdClassEncode());
+
+            $obj->attachments=array();
+            if($attachment!==null){
+                foreach($attachment as $a){
+                    array_push($obj->attachments,$a);
+                }
+            }
 			$obj->subject = $subject;
 			$obj->body=$body;
 			JobPoolProcessor::addJob($pool,$obj,$priority,$delay);//set to send later
@@ -322,18 +329,17 @@ END:VCALENDAR';
 
 	}
 
-	/**
-	 * Send the email that was previously saved as a job
-	 * @param $obj stdClass
-	 * @throws MailException
-	 */
+    /**
+     * Send the email that was previously saved as a job
+     * @param $obj stdClass
+     * @throws MailException
+     * @throws FileNotExistException
+     */
 	public static function doSendMailJob(stdClass $obj)
 	{
-		if(strcmp(Config::get('ENV'),'prod')===0)
-		{
+		if(strcmp(Config::get('ENV'),'prod')===0) {
 			$log=LogManager::createLogger('EmailHelper');
-			if(self::validateSendMailJob($obj)===false)
-			{
+			if(self::validateSendMailJob($obj)===false) {
 				$log->error('Send mail job failed due to invalid object');
 				return;
 			}
@@ -341,12 +347,18 @@ END:VCALENDAR';
 			foreach($obj->to as $add)
 				$tos->add(EmailPerson::fromStdClass($add));
 
+            $attachments=array();
+            foreach($obj->attachments as $a) {
+                array_push($attachments,new EmailAttachment($a));
+            }
+
 			self::sendMail(
 				EmailPerson::fromStdClass($obj->from),
 				EmailPerson::fromStdClass($obj->replyTo),
 				$tos,
 				$obj->subject,
-				$obj->body
+				$obj->body,
+                $attachments
 			);
 			$log->info('Mail sent');
 		}
