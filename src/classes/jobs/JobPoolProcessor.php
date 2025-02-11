@@ -13,6 +13,7 @@ namespace rizwanjiwan\common\classes\jobs;
 use Exception;
 use Monolog\Logger;
 use Pheanstalk\Contract\PheanstalkInterface;
+use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
 use rizwanjiwan\common\classes\LogManager;
 use stdClass;
@@ -108,8 +109,9 @@ class JobPoolProcessor
 	 * @param null|int $priority The priority you want to assign to this job or null for default (1024)
 	 * @param null|int $delay the delay in seconds you want to assign to this job or null for default (0)
 	 * @param null|int $ttr the max time to run in seconds you want to assign for this job or null for default (60)
+     * @return ?Job the Job or null on error (logs errors)
 	 */
-	public static function addJob(string $pool,stdClass $data,$priority=null,$delay=null,$ttr=null)
+	public static function addJob(string $pool,stdClass $data,$priority=null,$delay=null,$ttr=null):?Job
 	{
 		if(self::$log===null)
 			self::$log=LogManager::createLogger('JobPoolProcessor');
@@ -135,7 +137,8 @@ class JobPoolProcessor
 			$queue->useTube($pool);
 			$job=$queue->put($encoded,$priority,$delay,$ttr);
 			self::$log->info("Add ".$pool.'.'.$job->getId().": ".$encoded);
-
+            return $job;
 		}
+        return null;
 	}
 }
