@@ -38,6 +38,9 @@ AUTH_SECRET=[random string +16 char]
 #OAUTH_GOOGLE_CLIENT_SECRET=[from google]
 #OAUTH_MS_CLIENT_ID=[from microsoft]
 #OAUTH_MS_CLIENT_SECRET=[from microsoft]
+#OAUTH_SLACK_CLIENT_ID=[from slack]
+#OAUTH_SLACK_CLIENT_SECRET=[from slack]
+#OAUTH_SLACK_CLIENT_SCOPES=chat:write,users:read,channels:read,groups:read,im:read,mpim:read... etc.
 
 #For sending email
 SMTP_LOGIN=[google apps login to send email]
