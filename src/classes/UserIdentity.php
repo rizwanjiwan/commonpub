@@ -17,6 +17,8 @@ class UserIdentity
     const METHOD_AZURE_AD=2;
     const METHOD_DEV_MODE=3;
     const METHOD_DB=4;
+    const METHOD_SLACK=5;
+
 
     private ?string $name=null;
     private ?string $domain=null;
@@ -255,6 +257,8 @@ class UserIdentity
             return 'DevMode';
         if($this->method===self::METHOD_DB)
             return 'DB';
+        if($this->method===self::METHOD_SLACK)
+            return 'Slack';
         return 'Unknown';
     }
 
