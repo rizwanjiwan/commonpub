@@ -4,7 +4,6 @@
 namespace rizwanjiwan\common\traits;
 
 
-use AdamPaterson\OAuth2\Client\Provider\Slack;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use League\OAuth2\Client\Provider\AbstractProvider;
@@ -52,16 +51,7 @@ trait AuthenticationTrait
         $provider=$this->createProvider($routeParams[self::getRouteParamMethodName()],$routeParams[self::getRouteParamCallbackName()]);
         $_SESSION['oauth2state'] = $provider->getState();
         //echo $provider->getAuthorizationUrl();
-        $url='';
-        if(UserIdentity::METHOD_SLACK==$routeParams[self::getRouteParamMethodName()]){
-            $url = $provider->getAuthorizationUrl([
-                'scope' => Config::get('OAUTH_SLACK_CLIENT_SCOPES')
-            ]);
-        }
-        else{
-            $url=$provider->getAuthorizationUrl();
-        }
-        header('Location: '.$url);
+        header('Location: '.$provider->getAuthorizationUrl());
         $request->respondCustom();
     }
 
@@ -74,10 +64,9 @@ trait AuthenticationTrait
     /**
      * End the login process here. Will fill in UserIdentity for the user if login is successful... or Exception if shit got real.
      * @param $request Request. Should specify the self::getRouteParamMethodName()=>UserIdentity.METHOD_* and self::getRouteParamCallbackName()=>callback url in the route params
-     * @return ?array an array of extra information from the oauth call depending on what you called
      * @throws AuthorizationException|GuzzleException
      */
-    protected function processCallback(Request $request):?array
+    protected function processCallback(Request $request)
     {
         if(array_key_exists('code',$_GET)===false)
             throw new AuthorizationException('Bad callback. Are you sure you clicked the login button?');
@@ -90,7 +79,8 @@ trait AuthenticationTrait
             $token = $provider->getAccessToken('authorization_code', [
                 'code' => $_GET['code']
             ]);
-            if ($method == UserIdentity::METHOD_GOOGLE) {
+            if ($method == UserIdentity::METHOD_GOOGLE)
+            {
                 $userGoogle = $provider->getResourceOwner($token);
                 /**@var $userGoogle GoogleUser */
                 // Use these details to setup the identity
@@ -104,9 +94,9 @@ trait AuthenticationTrait
                     UserIdentity::METHOD_GOOGLE);
                 // Use this to interact with an API on the users behalf
                 $request->respondCustom();
-                return null;
-            }
-            else if ($method == UserIdentity::METHOD_AZURE_AD) {
+                return;
+            } else if ($method == UserIdentity::METHOD_AZURE_AD)
+            {
                 $graph = new Graph();
                 $graph->setAccessToken($token->getToken());
 
@@ -127,10 +117,7 @@ trait AuthenticationTrait
                     null,
                     UserIdentity::METHOD_AZURE_AD);
                 $request->respondCustom();
-                return null;
-            }
-            else if ($method == UserIdentity::METHOD_SLACK) {
-                return $token->getValues();
+                return;
             }
         }
         catch(AuthorizationException $e)
@@ -176,15 +163,6 @@ trait AuthenticationTrait
                 'clientSecret' => Config::get('OAUTH_GOOGLE_CLIENT_SECRET'),
                 'redirectUri'  => $callback,
             ));
-        }
-        else if($method===UserIdentity::METHOD_SLACK)
-        {
-            $this->log->info('Creating Slack Oauth Provider');
-            $provider = new Slack([
-                'clientId'          => Config::get('OAUTH_SLACK_CLIENT_ID'),
-                'clientSecret'      => Config::get('OAUTH_SLACK_CLIENT_SECRET'),
-                'redirectUri'       => $callback
-            ]);
         }
         elseif($method===UserIdentity::METHOD_AZURE_AD)
             $provider = new GenericProvider(array(

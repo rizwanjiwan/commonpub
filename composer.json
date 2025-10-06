@@ -18,8 +18,7 @@
     "sentry/sdk": "^3.0",
     "ext-json": "*",
     "ext-pdo": "*",
-    "ext-ctype": "*",
-    "adam-paterson/oauth2-slack": "^1.1"
+    "ext-ctype": "*"
   },
   "autoload": {
     "psr-4": {
