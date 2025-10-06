@@ -130,19 +130,7 @@ trait AuthenticationTrait
                 return null;
             }
             else if ($method == UserIdentity::METHOD_SLACK) {
-                try{
-                    $log=LogManager::createLogger('tmp');
-                    $team = $provider->getResourceOwner($token);
-                    $log->info('Token: '.$token);
-                    $log->info('ID: '.$team->getId());
-                    $log->info('Name: '.$team->getName());
-                    $log->info('Email: '.$team->getEmail());
-                    return $token->getValues();
-                }
-                catch (Exception $e) {
-                    throw new AuthorizationException($e->getMessage(), 0, $e);
-                }
-
+                return $token->getValues();
             }
         }
         catch(AuthorizationException $e)
