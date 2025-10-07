@@ -49,7 +49,8 @@ class UserIdentity
 
         $this->secret=Config::get('AUTH_SECRET');
         //check if there is a session already set, validate it if it is
-        if((array_key_exists('name',$_SESSION))&&
+        if( is_array($_SESSION) &&
+            (array_key_exists('name',$_SESSION))&&
             (array_key_exists('domain',$_SESSION))&&
             (array_key_exists('email',$_SESSION))&&
             (array_key_exists('picture',$_SESSION))&&
