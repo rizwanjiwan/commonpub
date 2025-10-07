@@ -178,8 +178,9 @@ class UserIdentity
         unset($_SESSION['expiry']);
         unset($_SESSION['token']);
         unset($_SESSION['method']);
-        if((array_key_exists('dbId',$_SESSION)))
+        if(is_array($_SESSION) && array_key_exists('dbId',$_SESSION)){
             unset($_SESSION['dbId']);
+        }
     }
 
     /**
