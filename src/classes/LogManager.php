@@ -190,17 +190,44 @@ class LogManager
      */
     private static function getPdoConn()
     {
-        $pdo=new PDO(
-            'mysql:host='.Config::get('DB_LOG_HOST').';port='.Config::get('DB_LOG_PORT').';dbname='.Config::get('DB_LOG_DATABASE'),
-            Config::get('DB_LOG_LOGIN'),
-            Config::get('DB_LOG_PASSWORD'),
-            array (
-                'charset' => 'utf8mb4',
-                'queries' =>
-                    array (
-                        'utf8'=>"SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci, COLLATION_CONNECTION = utf8mb4_unicode_ci, COLLATION_DATABASE = utf8mb4_unicode_ci, COLLATION_SERVER = utf8mb4_unicode_ci"
-                    ),
-            ));
+        $certPath=realpath(dirname(__FILE__)).'/../../../storage/mysql-certs/';
+        $host=Config::get("DB_LOG_HOST");
+        $login=Config::get("DB_LOG_LOGIN");
+        $password=Config::get("DB_LOG_PASSWORD");
+        $dbName=Config::get("DB_LOG_DATABASE");
+        $port=Config::get("DB_LOG_PORT");
+        if(Config::get("DB_LOG_SSL")!==null && Config::get("DB_LOG_SSL") && file_exists($certPath)){
+            //we have certificates to use
+            $pdo=new PDO(
+                'mysql:host=' . $host . ';port=' . $port. ';dbname=' . $dbName . ';charset=utf8mb4',
+                $login,
+                $password,
+                array(
+                    PDO::MYSQL_ATTR_SSL_KEY => $certPath.'client-key.pem',
+                    PDO::MYSQL_ATTR_SSL_CERT => $certPath.'client-cert.pem',
+                    PDO::MYSQL_ATTR_SSL_CA => $certPath.'server-ca.pem',
+                    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+                    'charset' => 'utf8mb4',
+                    'queries' =>
+                        array (
+                            'utf8'=>"SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci, COLLATION_CONNECTION = utf8mb4_unicode_ci, COLLATION_DATABASE = utf8mb4_unicode_ci, COLLATION_SERVER = utf8mb4_unicode_ci"
+                        ),
+                )
+            );
+        }
+        else{   //plane ol' PDO
+            $pdo=new PDO(
+                'mysql:host='.$host.';port='.$port.';dbname='.$dbName,
+                $login,
+                $password,
+                array (
+                    'charset' => 'utf8mb4',
+                    'queries' =>
+                        array (
+                            'utf8'=>"SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci, COLLATION_CONNECTION = utf8mb4_unicode_ci, COLLATION_DATABASE = utf8mb4_unicode_ci, COLLATION_SERVER = utf8mb4_unicode_ci"
+                        ),
+                ));
+        }
         return $pdo;
     }
 
