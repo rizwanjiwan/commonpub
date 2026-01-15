@@ -190,7 +190,7 @@ class LogManager
      */
     private static function getPdoConn()
     {
-        $certPath=realpath(dirname(__FILE__)).'/../../../../../storage/mysql-certs/';
+        $certPath=realpath(dirname(__FILE__)).'/../../../storage/mysql-certs/';
         $host=Config::get("DB_LOG_HOST");
         $login=Config::get("DB_LOG_LOGIN");
         $password=Config::get("DB_LOG_PASSWORD");
