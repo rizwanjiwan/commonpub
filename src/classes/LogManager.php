@@ -196,7 +196,7 @@ class LogManager
         $password=Config::get("DB_LOG_PASSWORD");
         $dbName=Config::get("DB_LOG_DATABASE");
         $port=Config::get("DB_LOG_PORT");
-        if(file_exists($certPath)){
+        if(Config::get("DB_LOG_SSL")!==null && Config::get("DB_LOG_SSL") && file_exists($certPath)){
             //we have certificates to use
             $pdo=new PDO(
                 'mysql:host=' . $host . ';port=' . $port. ';dbname=' . $dbName . ';charset=utf8mb4',
