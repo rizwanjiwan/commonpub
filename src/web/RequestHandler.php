@@ -206,7 +206,7 @@ class RequestHandler
 			}
             $route=$this->routes[$url];
             if(Config::getBool('MAINTENANCE_MODE')) {
-                $route= new ViewRoute('maintenance','pages.errors.maintenance');
+                $route= new ViewRoute('maintenance','errors.maintenance');
             }
 			/**@var $route Route*/
 			$request->routeParams=$route->getParameters();
