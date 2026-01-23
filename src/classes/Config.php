@@ -88,6 +88,9 @@ class Config
 	public static function getBool(string $key):bool
 	{
 		$val=self::get($key);
+        if($val===false){
+            return false;
+        }
 		return strcasecmp($val,'true')===0;
 	}
 

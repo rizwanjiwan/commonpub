@@ -9,6 +9,7 @@ use Exception;
 use rizwanjiwan\common\classes\Config;
 use rizwanjiwan\common\classes\exceptions\RouteException;
 use rizwanjiwan\common\classes\LogManager;
+use rizwanjiwan\common\web\routes\ViewRoute;
 use function Sentry\init as sentryInit;
 use function Sentry\captureException as sendExceptionToSentry;
 use function Sentry\captureLastError as sendLastErrorToSentry;
@@ -203,7 +204,10 @@ class RequestHandler
 				$request->respondError($url,404);
 				return;
 			}
-			$route=$this->routes[$url];
+            $route=$this->routes[$url];
+            if(Config::getBool('MAINTENANCE_MODE')) {
+                $route= new ViewRoute('maintenance','pages.errors.maintenance');
+            }
 			/**@var $route Route*/
 			$request->routeParams=$route->getParameters();
 			$route->doRouting($request);
