@@ -59,6 +59,7 @@ FORCE_HTTPS=false
 
 #debug level [DEBUG, ERROR, INFO] are common settings
 LOG_LEV=DEBUG
+MAINTENANCE_MODE=[true/false]
 #if you want to use sentry for critical/shutdown errors, set to true
 SENTRY_ON=[true,false]
 SENTRY_DNS_PHP=https://[some string]@sentry.io/[some int]
