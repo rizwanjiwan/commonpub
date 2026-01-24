@@ -15,6 +15,8 @@ class Config
 	 */
 	private static $envVars=null;
 
+    private static ?string $path=null;  //path to the config file
+
     /**
      * Initialize this static
      * @param string $path path relative to this file to open the config
@@ -25,6 +27,7 @@ class Config
 			return;
 		self::$envVars=array();
 		$fh=fopen(realpath(dirname(__FILE__)).$path,'r');
+        self::$path=$path;
 		while (($line = fgets($fh)) !== false)
 		{
 			$line=trim($line);
@@ -94,14 +97,40 @@ class Config
 		return strcasecmp($val,'true')===0;
 	}
 
-	/**
-	 * Set a value
-	 * @param $key string
-	 * @param $value string
-	 */
-	public static function set(string $key,string $value)
+    /**
+     * Set a value
+     * @param $key string
+     * @param $value string
+     * @param bool $persist true to persist to config file
+     */
+	public static function set(string $key,string $value,bool $persist=false):void
 	{
 		self::init();
 		self::$envVars[$key]=$value;
+        if($persist){
+            //read the file in one line at a time and overwrite as needed
+            $path=realpath(dirname(__FILE__)).self::$path;
+            $oldFileContents=file($path,FILE_IGNORE_NEW_LINES);
+            $newFileContents='';
+            foreach($oldFileContents as $line)
+            {
+                $line=trim($line);
+                if((strlen($line)===0)||(strpos($line,'#')!==0))	//process normal line
+                {
+                    $lineSplit=explode('=',$line,2);
+                    $key=trim($lineSplit[0]);
+                    if(strcmp($key,'')!==0 && (array_key_exists($key,self::$envVars))){
+                        $newFileContents.=$key.'='.self::$envVars[$key].PHP_EOL;
+                    }
+                    else{   //pass through
+                        $newFileContents.=$line.PHP_EOL;
+                    }
+                }
+                else{   //just pass through
+                    $newFileContents.=$line.PHP_EOL;
+                }
+            }
+            file_put_contents($path,$newFileContents);  //done
+        }
 	}
 }
