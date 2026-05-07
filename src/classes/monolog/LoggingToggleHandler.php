@@ -7,7 +7,6 @@ namespace rizwanjiwan\common\classes\monolog;
 
 use rizwanjiwan\common\classes\LogManager;
 use Monolog\Handler\AbstractHandler;
-use Monolog\LogRecord;
 
 class LoggingToggleHandler extends AbstractHandler
 {
@@ -22,11 +21,11 @@ class LoggingToggleHandler extends AbstractHandler
 	 * Unless the bubbling is interrupted (by returning true), the Logger class will keep on
 	 * calling further handlers in the stack with a given log record.
 	 *
-	 * @param  LogRecord $record The record to handle
+	 * @param  array $record The record to handle
 	 * @return Boolean true means that this handler handled the record, and that bubbling is not permitted.
 	 *                        false means the record was either not processed or that this handler allows bubbling.
 	 */
-	public function handle(LogRecord $record): bool
+	public function handle(array $record): bool
 	{
         return LogManager::isLoggingOn()===false;
 	}

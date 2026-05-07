@@ -12,16 +12,15 @@ namespace rizwanjiwan\common\classes\jobs;
 
 use Exception;
 use Monolog\Logger;
-use Pheanstalk\Contract\PheanstalkPublisherInterface;
+use Pheanstalk\Contract\PheanstalkInterface;
+use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
-use Pheanstalk\Values\Job;
-use Pheanstalk\Values\TubeName;
 use rizwanjiwan\common\classes\LogManager;
 use stdClass;
 
 class JobPoolProcessor
 {
-	const string RETRY_PROPERTY='retry';
+	const RETRY_PROPERTY='retry';
 
 	private string $pool;
 	private string $className;
@@ -52,7 +51,7 @@ class JobPoolProcessor
 	public function run()
 	{
 		$queue =  Pheanstalk::create('127.0.0.1');
-		$queue->watch(new TubeName($this->pool));
+		$queue->watch($this->pool);
 		while(true)
 		{
             $job = $queue->reserveWithTimeout(50);
@@ -117,11 +116,11 @@ class JobPoolProcessor
 		if(self::$log===null)
 			self::$log=LogManager::createLogger('JobPoolProcessor');
 		if($priority===null)
-			$priority= PheanstalkPublisherInterface::DEFAULT_PRIORITY;
+			$priority= PheanstalkInterface::DEFAULT_PRIORITY;
 		if($delay===null)
-			$delay= PheanstalkPublisherInterface::DEFAULT_DELAY;
+			$delay= PheanstalkInterface::DEFAULT_DELAY;
 		if($ttr===null)
-			$ttr= PheanstalkPublisherInterface::DEFAULT_TTR;
+			$ttr= PheanstalkInterface::DEFAULT_TTR;
 
 		$retryProperty=self::RETRY_PROPERTY;
 		if(property_exists($data,$retryProperty)===false)	//track how many times we've retried to allow for limited retries
@@ -135,8 +134,8 @@ class JobPoolProcessor
 		else
 		{
 			$queue = Pheanstalk::create('127.0.0.1');
-			$queue->useTube(new TubeName($pool));
-			$job=new Job($queue->put($encoded,$priority,$delay,$ttr),$encoded);
+			$queue->useTube($pool);
+			$job=$queue->put($encoded,$priority,$delay,$ttr);
 			self::$log->info("Add ".$pool.'.'.$job->getId().": ".$encoded);
             return $job;
 		}

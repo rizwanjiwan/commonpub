@@ -7,7 +7,6 @@ namespace rizwanjiwan\common\classes\monolog;
 
 
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\LogRecord;
 
 class LoggingBufferHandler extends AbstractProcessingHandler
 {
@@ -29,12 +28,11 @@ class LoggingBufferHandler extends AbstractProcessingHandler
 	/**
 	 * Writes the record down to the log of the implementing handler
 	 *
-	 * @param  LogRecord $record
+	 * @param  array $record
 	 * @return void
 	 */
-	protected function write(LogRecord $record): void
+	protected function write(array $record): void
 	{
-        $record=$record->toArray();
 		self::$buffer.=(string)$record['formatted'];
 	}
 }

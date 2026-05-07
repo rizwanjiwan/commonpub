@@ -10,7 +10,6 @@ use rizwanjiwan\common\classes\Config;
 use rizwanjiwan\common\classes\LogManager;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
-use Monolog\LogRecord;
 use PDO;
 use PDOStatement;
 
@@ -162,13 +161,12 @@ class MySqlHandler extends AbstractProcessingHandler
 	/**
 	 * Writes the record down to the log of the implementing handler
 	 *
-	 * @param  LogRecord $record
+	 * @param  $record[]
 	 * @return void
 	 */
-	protected function write(LogRecord $record): void
+	protected function write(array $record): void
 	{
 
-        $record=$record->toArray();
 		if (!$this->initialized) {
 			$this->initialize();
 		}
