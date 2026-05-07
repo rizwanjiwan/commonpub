@@ -31,5 +31,8 @@ class CreditCardExpiryValidator implements Validator
         if (($year < intval(date('y'))) || ($year > intval(date('y'))+10)) {
             throw new InvalidValueException("Year is invalid");
         }
+        if (($year === intval(date('y'))) && ($month < intval(date('n')))) {
+            throw new InvalidValueException("Expiry date is in the past");
+        }
     }
 }

@@ -9,6 +9,8 @@ use rizwanjiwan\common\web\fields\SelectField;
  * @var SelectField[]|null $dropDownFilters of values for the dropdown filters
  */
 
+?>
+
 @include('components.filterablelist.html',[
         'appTagId'=>'list',
         'linkUrl'=>\rizwanjiwan\common\web\RequestHandler::getUrl('viewItem'),

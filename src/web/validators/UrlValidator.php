@@ -22,7 +22,7 @@ class UrlValidator implements Validator
 	 */
 	public function validate(AbstractField $field,NameableContainer $fields)
 	{
-		$val=trim($field->getValue());
+		$val=trim($field->getValue()??"");
 		if(strlen($val)===0)
 			return;
 		if(filter_var($val, FILTER_VALIDATE_URL)===false)

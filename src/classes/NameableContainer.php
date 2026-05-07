@@ -75,8 +75,11 @@ class NameableContainer implements Iterator, Countable, Nameable
 		$uniqueName=$nameable->getUniqueName();
 		//$log = Logger::getLogger('default');
 		//$log->trace('adding '.$uniqueName.' to container');
+		$alreadyExists=array_key_exists($uniqueName,$this->items);
+		if(($overwrite===false)&&($alreadyExists))	//prevent multiple adds of the same thing to the key list
+			return $this;
 		$this->items[$uniqueName]=$nameable;
-		if(($overwrite===false)&&(array_key_exists($uniqueName,$this->items)))	//prevent multiple adds of the same thing to the key list
+		if($alreadyExists)
 			return $this;
 		array_push($this->keys,$uniqueName);
 		return $this;

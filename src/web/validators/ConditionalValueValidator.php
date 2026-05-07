@@ -56,7 +56,7 @@ class ConditionalValueValidator implements Validator
         }
 		$equals=false;
 		if(is_array($value))//check if the value of interest is in the array
-			$equals=array_search($this->value,$value);
+			$equals=in_array($this->value,$value);
 		else
 			$equals=strcasecmp($this->value,$value)===0;
 		if($equals)

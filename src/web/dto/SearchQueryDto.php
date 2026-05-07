@@ -71,6 +71,9 @@ class SearchQueryDto
                 //need to decode
                 $filters=json_decode($filters,true);
             }
+            if(is_array($filters)===false){
+                throw new DtoException('Invalid filters');
+            }
             foreach($filters as $key=> $val){
                 $this->filters[$key]=$val;
             }

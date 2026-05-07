@@ -13,7 +13,18 @@ class TrimPostValuesFilter implements Filter
     public function filter(Request $request)
     {
         foreach($_REQUEST as $key=>$val){
-            $_REQUEST[$key]=trim($val);
+            $_REQUEST[$key]=$this->trimValue($val);
         }
+    }
+
+    private function trimValue(mixed $value):mixed
+    {
+        if(is_array($value)){
+            return array_map(array($this,'trimValue'),$value);
+        }
+        if(is_string($value)){
+            return trim($value);
+        }
+        return $value;
     }
 }

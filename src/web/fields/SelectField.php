@@ -90,7 +90,7 @@ class SelectField extends AbstractField
 	 */
 	public function isSelected(string $name):bool
 	{
-		return strcmp($name,$this->getValue())===0;
+		return strcmp($name,$this->getValue()??"")===0;
 	}
 
 	/**
@@ -99,7 +99,7 @@ class SelectField extends AbstractField
 	 */
 	public function isDefault():bool
 	{
-		return strcmp($this->getValue(),$this->defaultValue)===0;
+		return $this->getValue()===$this->defaultValue;
 	}
 
 	/**

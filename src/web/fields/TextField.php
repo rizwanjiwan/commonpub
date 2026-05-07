@@ -94,7 +94,7 @@ class TextField extends AbstractField
 	{
 		if($this->defaultValue===null)
 			return $this->isEmpty();
-		return strcmp($this->defaultValue,$this->getValue());
+		return strcmp($this->defaultValue,$this->getValue()??"")===0;
 	}
 
 	/**

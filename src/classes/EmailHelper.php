@@ -113,7 +113,7 @@ class EmailHelper implements FormatHelper
 	 * @param ?int $format_type The email format to use (see self::FORMAT_*)
 	 * @return ?string the value formatted appropriately. Will do best effort if isValid() doesn't return true
 	 */
-	public function getFormatted(int $format_type=null):?string
+	public function getFormatted(?int $format_type=null):?string
 	{
 	    if(($format_type===null)||($this->valueUnformatted===null))
 	        $format_type=self::FORMAT_NORMAL;
@@ -121,9 +121,9 @@ class EmailHelper implements FormatHelper
 		if($format_type===self::FORMAT_NORMAL)
 			return $value;
 		//they want host or user only
-		$parts=explode('@',$value);
+		$parts=explode('@',$value,2);
 		if($format_type===self::FORMAT_HOST_ONLY)
-			return $parts[1];	//host
+			return $parts[1]??"";	//host
 		return $parts[0];	//user
 	}
 
