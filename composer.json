@@ -6,15 +6,15 @@
   "license": "GPL-3.0-or-later",
   "require": {
     "simonbackx/slack-php-webhook": "^1.0",
-    "monolog/monolog": "2.8.*",
-    "jenssegers/blade": "^1.1",
-    "giggsey/libphonenumber-for-php": "8.*",
+    "monolog/monolog": "3.*",
+    "jenssegers/blade": "^2",
+    "giggsey/libphonenumber-for-php": "9.*",
     "league/oauth2-client": "2.*",
     "microsoft/microsoft-graph": "1.*",
-    "league/oauth2-google":"3.*",
-    "phpmailer/phpmailer": "~6.1",
-    "pda/pheanstalk": "4.*",
-    "nesbot/carbon": "2.*",
+    "league/oauth2-google":"5.*",
+    "phpmailer/phpmailer": "7.*",
+    "pda/pheanstalk": "8.*",
+    "nesbot/carbon": "3.*",
     "sentry/sdk": "^3.0",
     "ext-json": "*",
     "ext-pdo": "*",
@@ -27,7 +27,7 @@
   },
   "config": {
     "platform": {
-      "php": "8.0"
+      "php": "8.3"
     },
     "allow-plugins": {
       "php-http/discovery": true

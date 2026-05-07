@@ -16,7 +16,7 @@ class HtmlRowFormatter extends NormalizerFormatter
 	/**
 	 * Translates Monolog log levels to html color priorities.
 	 */
-	protected static $logLevels = [
+	protected static array $logLevels = [
 		Logger::DEBUG     => '#cccccc',
 		Logger::INFO      => '#468847',
 		Logger::NOTICE    => '#3a87ad',
@@ -35,11 +35,12 @@ class HtmlRowFormatter extends NormalizerFormatter
 	/**
 	 * Formats a log record.
 	 *
-	 * @param  array $record A record to format
+	 * @param  LogRecord $record A record to format
 	 * @return string The formatted record
 	 */
-	public function format(array $record): string
+	public function format(LogRecord $record): string
     {
+        $record=$record->toArray();
         $output = '<tr style="border:1px;">';
 		$output.='<td style="border:1px;padding: 4px;text-align: left;background: '.self::$logLevels[$record['level']].'">'.htmlentities($record['level_name']).'</td>';
 		$output.='<td style="border:1px;padding: 4px;text-align: left;background: #eeeeee">'.htmlentities($record['channel']).'</td>';
