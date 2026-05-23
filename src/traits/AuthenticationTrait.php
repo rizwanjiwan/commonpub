@@ -6,12 +6,16 @@ namespace rizwanjiwan\common\traits;
 
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use Http\Promise\FulfilledPromise;
+use Http\Promise\Promise;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\GenericProvider;
 use League\OAuth2\Client\Provider\GoogleUser;
-use Microsoft\Graph\Exception\GraphException;
-use Microsoft\Graph\Graph;
-use Microsoft\Graph\Model\User;
+use Microsoft\Graph\GraphServiceClient;
+use Microsoft\Kiota\Abstractions\ApiException;
+use Microsoft\Kiota\Abstractions\Authentication\AccessTokenProvider;
+use Microsoft\Kiota\Abstractions\Authentication\AllowedHostsValidator;
+use Microsoft\Kiota\Abstractions\Authentication\BaseBearerTokenAuthenticationProvider;
 use Monolog\Logger;
 use rizwanjiwan\common\classes\Config;
 use rizwanjiwan\common\classes\exceptions\AuthorizationException;
@@ -97,23 +101,21 @@ trait AuthenticationTrait
                 return;
             } else if ($method == UserIdentity::METHOD_AZURE_AD)
             {
-                $graph = new Graph();
-                $graph->setAccessToken($token->getToken());
+                $graph = $this->createGraphClient($token->getToken());
 
                 try
                 {
-                    $userAd = $graph->createRequest('GET', '/me')
-                        ->setReturnType(User::class)
-                        ->execute();
-                } catch (GraphException $e)
+                    $userAd = $graph->me()->get()->wait();
+                } catch (ApiException $e)
                 {
                     throw new AuthorizationException($e->getMessage(), 0, $e);
                 }
                 $identity = UserIdentity::singleton();
+                $email = $userAd->getMail() ?? $userAd->getUserPrincipalName();
                 $identity->setIdentity(
                     $userAd->getDisplayName(),
-                    $this->emailToDomain($userAd->getMail()),
-                    $userAd->getMail(),
+                    $this->emailToDomain($email),
+                    $email,
                     null,
                     UserIdentity::METHOD_AZURE_AD);
                 $request->respondCustom();
@@ -147,6 +149,33 @@ trait AuthenticationTrait
         $parts=explode('@',$email);
         return $parts[1];
     }
+
+    private function createGraphClient(string $accessToken): GraphServiceClient
+    {
+        $accessTokenProvider = new class($accessToken) implements AccessTokenProvider {
+            private AllowedHostsValidator $allowedHostsValidator;
+
+            public function __construct(private string $accessToken)
+            {
+                $this->allowedHostsValidator = new AllowedHostsValidator(['graph.microsoft.com']);
+            }
+
+            public function getAuthorizationTokenAsync(string $url, array $additionalAuthenticationContext = []): Promise
+            {
+                return new FulfilledPromise($this->accessToken);
+            }
+
+            public function getAllowedHostsValidator(): AllowedHostsValidator
+            {
+                return $this->allowedHostsValidator;
+            }
+        };
+
+        return GraphServiceClient::createWithAuthenticationProvider(
+            new BaseBearerTokenAuthenticationProvider($accessTokenProvider)
+        );
+    }
+
     /**
      * @param $method int UserIdentity::METHOD_*
      * @param $callback string url to send the callback.

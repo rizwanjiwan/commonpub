@@ -35,10 +35,10 @@ class HtmlRowFormatter extends NormalizerFormatter
 	/**
 	 * Formats a log record.
 	 *
-	 * @param  array $record A record to format
+	 * @param  LogRecord $record A record to format
 	 * @return string The formatted record
 	 */
-	public function format(array $record): string
+	public function format(LogRecord $record): string
     {
         $output = '<tr style="border:1px;">';
 		$output.='<td style="border:1px;padding: 4px;text-align: left;background: '.self::$logLevels[$record['level']].'">'.htmlentities($record['level_name']).'</td>';

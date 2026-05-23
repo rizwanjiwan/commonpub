@@ -6,6 +6,7 @@
 namespace rizwanjiwan\common\web;
 
 use Exception;
+use Throwable;
 use rizwanjiwan\common\classes\Config;
 use rizwanjiwan\common\classes\exceptions\RouteException;
 use rizwanjiwan\common\classes\LogManager;
@@ -148,10 +149,10 @@ class RequestHandler
 	}
 
     /**
-     * @param $e Exception
-     * @throws Exception
+     * @param $e Throwable
+     * @throws Throwable
      */
-    public function handleException($e)
+    public function handleException(Throwable $e)
     {
         sendExceptionToSentry($e);
         $this->exceptionSentToSentry=true;

@@ -12,9 +12,10 @@ namespace rizwanjiwan\common\classes\jobs;
 
 use Exception;
 use Monolog\Logger;
-use Pheanstalk\Contract\PheanstalkInterface;
-use Pheanstalk\Job;
+use Pheanstalk\Contract\PheanstalkPublisherInterface;
 use Pheanstalk\Pheanstalk;
+use Pheanstalk\Values\Job;
+use Pheanstalk\Values\TubeName;
 use rizwanjiwan\common\classes\LogManager;
 use stdClass;
 
@@ -51,7 +52,7 @@ class JobPoolProcessor
 	public function run()
 	{
 		$queue =  Pheanstalk::create('127.0.0.1');
-		$queue->watch($this->pool);
+		$queue->watch(new TubeName($this->pool));
 		while(true)
 		{
             $job = $queue->reserveWithTimeout(50);
@@ -103,7 +104,7 @@ class JobPoolProcessor
 	}
 
 	/**
-	 * Add a job to later process
+	 * Add a job to a later process
 	 * @param $pool string the name of the pool to add this job to
 	 * @param $data stdClass to send to the job. The data may not have any of the properties listed as constants on this class (e.g. retry).
 	 * @param null|int $priority The priority you want to assign to this job or null for default (1024)
@@ -116,11 +117,11 @@ class JobPoolProcessor
 		if(self::$log===null)
 			self::$log=LogManager::createLogger('JobPoolProcessor');
 		if($priority===null)
-			$priority= PheanstalkInterface::DEFAULT_PRIORITY;
+			$priority= PheanstalkPublisherInterface::DEFAULT_PRIORITY;
 		if($delay===null)
-			$delay= PheanstalkInterface::DEFAULT_DELAY;
+			$delay= PheanstalkPublisherInterface::DEFAULT_DELAY;
 		if($ttr===null)
-			$ttr= PheanstalkInterface::DEFAULT_TTR;
+			$ttr= PheanstalkPublisherInterface::DEFAULT_TTR;
 
 		$retryProperty=self::RETRY_PROPERTY;
 		if(property_exists($data,$retryProperty)===false)	//track how many times we've retried to allow for limited retries
@@ -134,10 +135,10 @@ class JobPoolProcessor
 		else
 		{
 			$queue = Pheanstalk::create('127.0.0.1');
-			$queue->useTube($pool);
-			$job=$queue->put($encoded,$priority,$delay,$ttr);
-			self::$log->info("Add ".$pool.'.'.$job->getId().": ".$encoded);
-            return $job;
+			$queue->useTube(new TubeName($pool));
+			$jobId=$queue->put($encoded,$priority,$delay,$ttr);
+			self::$log->info("Add ".$pool.'.'.$jobId->getId().": ".$encoded);
+            return new Job($jobId, $encoded);
 		}
         return null;
 	}
