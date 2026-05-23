@@ -9,7 +9,9 @@ namespace rizwanjiwan\common\web;
 use rizwanjiwan\common\classes\Config;
 use rizwanjiwan\common\classes\NameableContainer;
 use Exception;
+use Illuminate\Container\Container as IlluminateContainer;
 use Jenssegers\Blade\Blade;
+use Jenssegers\Blade\Container as BladeContainer;
 use Monolog\Logger;
 use rizwanjiwan\common\web\helpers\Alert;
 
@@ -73,9 +75,12 @@ class Request
 		if (!file_exists($cachePath)) {
 			mkdir($cachePath, 0777, true);
 		}
+        $container = new BladeContainer();
+        IlluminateContainer::setInstance($container);
 		$blade = new Blade(
 			array(realpath(dirname(__FILE__)).Config::get('VIEW_DIR')),
-			$cachePath);
+			$cachePath,
+            $container);
 		//output
 		echo $blade->render($view,$data);
 	}
