@@ -7,7 +7,7 @@
   "require": {
     "simonbackx/slack-php-webhook": "^1.0",
     "monolog/monolog": "^3.10",
-    "jenssegers/blade": "^2.0",
+    "leafs/blade": "^5.0",
     "giggsey/libphonenumber-for-php": "^9.0",
     "league/oauth2-client": "^2.9",
     "microsoft/microsoft-graph": "^3.2",
@@ -24,6 +24,9 @@
     "psr-4": {
       "rizwanjiwan\\common\\": "src"
     }
+  },
+  "scripts": {
+    "test": "php tests/php85_compatibility.php"
   },
   "config": {
     "platform": {

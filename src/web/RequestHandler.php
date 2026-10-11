@@ -39,7 +39,7 @@ class RequestHandler
 		E_CORE_WARNING		=>	'Core Warning',
 		E_COMPILE_ERROR		=>	'Compile Error',
 		E_COMPILE_WARNING	=>	'Compile Warning',
-		E_STRICT			=>	'Strict Warning',
+		// E_STRICT was removed as a distinct runtime error level in PHP 8.4.
 		E_USER_ERROR		=>	'User Error'
 	);
 
