@@ -74,7 +74,7 @@ class Request
 			mkdir($cachePath, 0777, true);
 		}
         $blade = new Blade(
-            array(realpath(dirname(__FILE__)).Config::get('VIEW_DIR')),
+            realpath(dirname(__FILE__)).Config::get('VIEW_DIR'),
             $cachePath);
 		//output
 		echo $blade->render($view,$data);
