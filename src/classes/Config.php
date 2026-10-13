@@ -7,38 +7,56 @@ namespace rizwanjiwan\common\classes;
 //todo: deal with multibyte strings at some point: https://phptherightway.com/#php_and_utf8
 
 
+use rizwanjiwan\common\classes\exceptions\FileNotExistException;
+
 class Config
 {
 	/**
 	 * Holds the key value paris
-	 * @var array
+	 * @var ?array
 	 */
-	private static $envVars=null;
+	private static ?array $envVars=null;
 
     private static ?string $path=null;  //path to the config file
 
     /**
      * Initialize this static
      * @param string $path path relative to this file to open the config
+     * @throws FileNotExistException
      */
 	public static function init(string $path='/../../../../../config')
 	{
 		if(self::$envVars!==null)
 			return;
-		self::$envVars=array();
-		$fh=fopen(realpath(dirname(__FILE__)).$path,'r');
-        self::$path=$path;
-		while (($line = fgets($fh)) !== false)
-		{
-			$line=trim($line);
-			if((strlen($line)===0)||(strpos($line,'#')!==0))	//skip comment lines and blanks
-			{
-				$lineSplit=explode('=',$line,2);
-				$key=trim($lineSplit[0]);
-				if(strcmp($key,'')!==0)
-					Config::$envVars[trim($key)]=trim($lineSplit[1]);
-			}
-		}
+        if(file_exists(realpath(dirname(__FILE__)).$path)===false)
+        {
+            if(getenv('CONFIG_ENV')!=='true'){
+                throw new FileNotExistException('Config file not found: '.$path.'. Set CONFIG_ENV=true to use environment variables.');
+            }
+            self::$envVars=array();
+            //grab env vars:
+            foreach(getenv() as $key=>$val) {
+                Config::$envVars[$key]=$val;
+            }
+        }
+        else{   //parse file
+            self::$envVars=array();
+            $fh=fopen(realpath(dirname(__FILE__)).$path,'r');
+            self::$path=$path;
+            while (($line = fgets($fh)) !== false)
+            {
+                $line=trim($line);
+                if((strlen($line)===0)||(strpos($line,'#')!==0))	//skip comment lines and blanks
+                {
+                    $lineSplit=explode('=',$line,2);
+                    $key=trim($lineSplit[0]);
+                    if(strcmp($key,'')!==0)
+                        Config::$envVars[trim($key)]=trim($lineSplit[1]);
+                }
+            }
+        }
+
+
 	}
 
 	/**
@@ -108,29 +126,34 @@ class Config
 		self::init();
 		self::$envVars[$key]=$value;
         if($persist){
-            //read the file in one line at a time and overwrite as needed
-            $path=realpath(dirname(__FILE__)).self::$path;
-            $oldFileContents=file($path,FILE_IGNORE_NEW_LINES);
-            $newFileContents='';
-            foreach($oldFileContents as $line)
-            {
-                $line=trim($line);
-                if((strlen($line)===0)||(strpos($line,'#')!==0))	//process normal line
+            if(self::$path===null){
+                putenv("$key=$value");
+            }
+            else{  //save to file
+                //read the file in one line at a time and overwrite as needed
+                $path=realpath(dirname(__FILE__)).self::$path;
+                $oldFileContents=file($path,FILE_IGNORE_NEW_LINES);
+                $newFileContents='';
+                foreach($oldFileContents as $line)
                 {
-                    $lineSplit=explode('=',$line,2);
-                    $key=trim($lineSplit[0]);
-                    if(strcmp($key,'')!==0 && (array_key_exists($key,self::$envVars))){
-                        $newFileContents.=$key.'='.self::$envVars[$key].PHP_EOL;
+                    $line=trim($line);
+                    if((strlen($line)===0)||(strpos($line,'#')!==0))	//process normal line
+                    {
+                        $lineSplit=explode('=',$line,2);
+                        $key=trim($lineSplit[0]);
+                        if(strcmp($key,'')!==0 && (array_key_exists($key,self::$envVars))){
+                            $newFileContents.=$key.'='.self::$envVars[$key].PHP_EOL;
+                        }
+                        else{   //pass through
+                            $newFileContents.=$line.PHP_EOL;
+                        }
                     }
-                    else{   //pass through
+                    else{   //just pass through
                         $newFileContents.=$line.PHP_EOL;
                     }
                 }
-                else{   //just pass through
-                    $newFileContents.=$line.PHP_EOL;
-                }
+                file_put_contents($path,$newFileContents);  //done
             }
-            file_put_contents($path,$newFileContents);  //done
         }
 	}
 }
