@@ -5,20 +5,20 @@ namespace rizwanjiwan\common\traits;
 
 
 use Exception;
-use GuzzleHttp\Exception\GuzzleException;
 use Http\Promise\FulfilledPromise;
 use Http\Promise\Promise;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\GenericProvider;
 use League\OAuth2\Client\Provider\GoogleUser;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Microsoft\Graph\GraphServiceClient;
-use Microsoft\Kiota\Abstractions\ApiException;
 use Microsoft\Kiota\Abstractions\Authentication\AccessTokenProvider;
 use Microsoft\Kiota\Abstractions\Authentication\AllowedHostsValidator;
 use Microsoft\Kiota\Abstractions\Authentication\BaseBearerTokenAuthenticationProvider;
 use Monolog\Logger;
 use rizwanjiwan\common\classes\Config;
 use rizwanjiwan\common\classes\exceptions\AuthorizationException;
+use rizwanjiwan\common\classes\exceptions\RejectedAuthorizationCodeException;
 use rizwanjiwan\common\classes\GoogleOpenIdProvider;
 use rizwanjiwan\common\classes\LogManager;
 use rizwanjiwan\common\classes\UserIdentity;
@@ -66,23 +66,44 @@ trait AuthenticationTrait
     }
 
     /**
-     * End the login process here. Will fill in UserIdentity for the user if login is successful... or Exception if shit got real.
-     * @param $request Request. Should specify the self::getRouteParamMethodName()=>UserIdentity.METHOD_* and self::getRouteParamCallbackName()=>callback url in the route params
-     * @throws AuthorizationException|GuzzleException
+     * Exchange the sign-in code and establish the identity reported by the provider.
+     *
+     * @param Request $request Callback request with the registered sign-in method and callback URL.
+     * @return void The identity is available through UserIdentity after successful sign-in.
+     * @throws RejectedAuthorizationCodeException When the provider requires a fresh sign-in code.
+     * @throws AuthorizationException When the callback, configuration, or identity lookup fails.
      */
     protected function processCallback(Request $request)
     {
         if(array_key_exists('code',$_GET)===false)
             throw new AuthorizationException('Bad callback. Are you sure you clicked the login button?');
+
+        $method = $request->routeParams[self::getRouteParamMethodName()] ?? null;
+        $operation = 'provider setup';
         try
         {
-            $routeParams = $request->routeParams;
-            $method = $routeParams[self::getRouteParamMethodName()];
-            $callback = $routeParams[self::getRouteParamCallbackName()];
+            $callback = $request->routeParams[self::getRouteParamCallbackName()] ?? null;
+            if ((!is_int($method) && !(is_string($method) && ctype_digit($method))) || !is_string($callback) || $callback === '')
+                throw new AuthorizationException('Invalid callback configuration.');
             $provider = $this->createProvider($method, $callback);
-            $token = $provider->getAccessToken('authorization_code', [
-                'code' => $_GET['code']
-            ]);
+            if ($provider === null)
+                throw new AuthorizationException('Unsupported sign-in method.');
+
+            $operation = 'authorization code exchange';
+            try
+            {
+                $token = $provider->getAccessToken('authorization_code', ['code' => $_GET['code']]);
+            }
+            catch (IdentityProviderException $e)
+            {
+                // Only a structured rejection during this exchange calls for a fresh sign-in.
+                $body = $e->getResponseBody();
+                if (is_array($body) && ($body['error'] ?? null) === 'invalid_grant')
+                    throw new RejectedAuthorizationCodeException('The sign-in code was rejected.');
+                throw $e;
+            }
+
+            $operation = 'identity lookup';
             if ($method == UserIdentity::METHOD_GOOGLE)
             {
                 $userGoogle = $provider->getResourceOwner($token);
@@ -103,13 +124,7 @@ trait AuthenticationTrait
             {
                 $graph = $this->createGraphClient($token->getToken());
 
-                try
-                {
-                    $userAd = $graph->me()->get()->wait();
-                } catch (ApiException $e)
-                {
-                    throw new AuthorizationException($e->getMessage(), 0, $e);
-                }
+                $userAd = $graph->me()->get()->wait();
                 $identity = UserIdentity::singleton();
                 $email = $userAd->getMail() ?? $userAd->getUserPrincipalName();
                 $identity->setIdentity(
@@ -121,19 +136,21 @@ trait AuthenticationTrait
                 $request->respondCustom();
                 return;
             }
+            throw new AuthorizationException('Unsupported identity lookup method.');
         }
-        catch(AuthorizationException $e)
+        catch (RejectedAuthorizationCodeException $e)
         {
-            $this->log->error('Provider '.$routeParams[self::getRouteParamMethodName()].' error: '.$e->getMessage());
+            $this->log->info('OAuth provider '.(int)$method.' rejected the sign-in code (invalid_grant).');
             throw $e;
         }
-        catch(Exception $e)
+        catch (Exception $e)
         {
-            $this->log->error('Provider '.$routeParams[self::getRouteParamMethodName()].' error: '.$e->getMessage());
-            throw new AuthorizationException('Error: '.$e->getMessage());
+            // Provider messages and response bodies can contain credentials or user details.
+            $providerId = is_numeric($method) ? (string)(int)$method : 'unknown';
+            $message = 'OAuth provider '.$providerId.' failed during '.$operation.' ('.$e::class.').';
+            $this->log->error($message);
+            throw new AuthorizationException($message);
         }
-        throw new AuthorizationException('Invalid sign-in method: '.$method);
-
     }
 
     /**

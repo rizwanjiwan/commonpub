@@ -26,7 +26,10 @@
     }
   },
   "scripts": {
-    "test": "php tests/php85_compatibility.php"
+    "test": [
+      "php tests/php85_compatibility.php",
+      "php tests/oauth_callback.php"
+    ]
   },
   "config": {
     "platform": {
